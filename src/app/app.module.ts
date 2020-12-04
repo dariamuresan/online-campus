@@ -9,6 +9,9 @@ import { StudentCourseListComponent } from './student-courses/student-course-lis
 import { StudentCourseItemComponent } from './student-courses/student-course-list/student-course-item/student-course-item.component';
 import { StudentCourseDetailComponent } from './student-courses/student-course-detail/student-course-detail.component';
 import { TeacherCoursesComponent } from './teacher-courses/teacher-courses.component';
+import { TeacherCourseListComponent } from './teacher-courses/teacher-course-list/teacher-course-list.component';
+import { TeacherCourseDetailComponent } from './teacher-courses/teacher-course-detail/teacher-course-detail.component';
+import { TeacherCourseItemComponent } from './teacher-courses/teacher-course-list/teacher-course-item/teacher-course-item.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,10 @@ import { TeacherCoursesComponent } from './teacher-courses/teacher-courses.compo
     StudentCourseListComponent,
     StudentCourseItemComponent,
     StudentCourseDetailComponent,
-    TeacherCoursesComponent
+    TeacherCoursesComponent,
+    TeacherCourseListComponent,
+    TeacherCourseDetailComponent,
+    TeacherCourseItemComponent
   ],
   imports: [
     BrowserModule,

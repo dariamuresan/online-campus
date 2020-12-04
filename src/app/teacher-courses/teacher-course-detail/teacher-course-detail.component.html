@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-left">
+            <h3>Course Name</h3>
+            <ul 
+            class="list-group list-group-flush">
+                <li 
+                class="list-group-item"
+                *ngFor="let student of students">{{ student.firstName }} {{ student.lastName }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-primary">Add A Student</button>
+    </div>
+</div>
