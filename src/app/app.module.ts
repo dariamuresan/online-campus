@@ -8,6 +8,7 @@ import { StudentCoursesComponent } from './student-courses/student-courses.compo
 import { StudentCourseListComponent } from './student-courses/student-course-list/student-course-list.component';
 import { StudentCourseItemComponent } from './student-courses/student-course-list/student-course-item/student-course-item.component';
 import { StudentCourseDetailComponent } from './student-courses/student-course-detail/student-course-detail.component';
+import { TeacherCoursesComponent } from './teacher-courses/teacher-courses.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { StudentCourseDetailComponent } from './student-courses/student-course-d
     StudentCoursesComponent,
     StudentCourseListComponent,
     StudentCourseItemComponent,
-    StudentCourseDetailComponent
+    StudentCourseDetailComponent,
+    TeacherCoursesComponent
   ],
   imports: [
     BrowserModule,
