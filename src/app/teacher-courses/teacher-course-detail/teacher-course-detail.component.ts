@@ -18,6 +18,8 @@ export class TeacherCourseDetailComponent implements OnInit {
     new Student(1, "Daria", "M.")
   ]
 
+  columnsToDisplay = ['name'];
+
   constructor() { }
 
   ngOnInit(): void {
