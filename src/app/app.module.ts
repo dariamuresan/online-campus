@@ -13,6 +13,7 @@ import { TeacherCourseListComponent } from './teacher-courses/teacher-course-lis
 import { TeacherCourseDetailComponent } from './teacher-courses/teacher-course-detail/teacher-course-detail.component';
 import { TeacherCourseItemComponent } from './teacher-courses/teacher-course-list/teacher-course-item/teacher-course-item.component';
 import { TeacherCoursesEditComponent } from './teacher-courses/teacher-courses-edit/teacher-courses-edit.component';
+import { AdminCoursesComponent } from './admin-courses/admin-courses.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { TeacherCoursesEditComponent } from './teacher-courses/teacher-courses-e
     TeacherCourseListComponent,
     TeacherCourseDetailComponent,
     TeacherCourseItemComponent,
-    TeacherCoursesEditComponent
+    TeacherCoursesEditComponent,
+    AdminCoursesComponent
   ],
   imports: [
     BrowserModule,
