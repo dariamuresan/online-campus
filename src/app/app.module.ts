@@ -16,7 +16,6 @@ import { TeacherCoursesEditComponent } from './teacher-courses/teacher-courses-e
 import { AdminCoursesComponent } from './admin-courses/admin-courses.component';
 import { AdminCourseListComponent } from './admin-courses/admin-course-list/admin-course-list.component';
 import { AdminCourseItemComponent } from './admin-courses/admin-course-list/admin-course-item/admin-course-item.component';
-import { AdminCourseDetailComponent } from './admin-courses/admin-course-detail/admin-course-detail.component';
 import { AdminCourseEditComponent } from './admin-courses/admin-course-edit/admin-course-edit.component';
 
 @NgModule({
@@ -35,7 +34,6 @@ import { AdminCourseEditComponent } from './admin-courses/admin-course-edit/admi
     AdminCoursesComponent,
     AdminCourseListComponent,
     AdminCourseItemComponent,
-    AdminCourseDetailComponent,
     AdminCourseEditComponent
   ],
   imports: [
