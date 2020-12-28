@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Course } from 'src/app/shared/course.model';
 
 @Component({
@@ -13,9 +13,15 @@ export class StudentCourseListComponent implements OnInit {
     new Course('Databases', 'Dan P.', 'SQL', 'DB')
   ];
 
+  @Output() courseWasSelected = new EventEmitter<Course>();
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onCourseSelected(course: Course) {
+    this.courseWasSelected.emit(course);
   }
 
 }
