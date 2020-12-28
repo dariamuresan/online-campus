@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'online-campus';
+
+  loadedUser = 'student';
+
+  onNavigation(user : string) {
+    this.loadedUser = user;
+  }
 }

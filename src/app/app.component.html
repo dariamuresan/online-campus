@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header (userSelected)=onNavigation($event)></app-header>
 <div class="container">
   <div class="row">
     <h3>Hello, User!</h3>
@@ -6,17 +6,8 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <app-student-courses></app-student-courses>
+      <app-student-courses *ngIf="loadedUser === 'student'"></app-student-courses>
+      <app-teacher-courses *ngIf="loadedUser === 'teacher'"></app-teacher-courses>
+      <app-admin-courses *ngIf="loadedUser === 'admin'"></app-admin-courses>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <app-teacher-courses></app-teacher-courses>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <app-admin-courses></app-admin-courses>
-    </div>
-  </div>
-</div>

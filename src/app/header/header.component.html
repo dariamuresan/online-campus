@@ -3,6 +3,14 @@
         <div class="navbar-header">
             <a href="#" class="navbar-brand">Online Campus</a>
         </div>
+
+        <div class="collapse navbar-collapse navbar-left">
+            <ul class="nav navbar-nav">
+                <li><a href="#" (click)="onSelect('admin')">Admin</a></li>
+                <li><a href="#" (click)="onSelect('teacher')">Teacher</a></li>
+                <li><a href="#" (click)="onSelect('student')">Student</a></li>
+            </ul>
+        </div>
         
         <div class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
