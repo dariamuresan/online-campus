@@ -9,6 +9,11 @@
         <app-admin-course-list></app-admin-course-list>
     </div>
     <div class="col-md-6">
-        <app-admin-course-edit></app-admin-course-edit>
+        <app-admin-course-edit
+        *ngIf="courseSelected; else infoText"
+        [course] = "courseSelected"></app-admin-course-edit>
+        <ng-template #infoText>
+            <p>Please Select A Course!</p>
+        </ng-template>
     </div>
 </div>

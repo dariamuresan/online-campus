@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from 'src/app/shared/course.model';
+import { AdminCoursesService } from '../admin-courses.service';
 
 @Component({
   selector: 'app-admin-course-list',
@@ -7,15 +8,12 @@ import { Course } from 'src/app/shared/course.model';
   styleUrls: ['./admin-course-list.component.css']
 })
 export class AdminCourseListComponent implements OnInit {
-  courses: Course[] = [
-    new Course('Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
-    new Course('Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
-    new Course('Databases', 'Dan P.', 'SQL', 'DB')
-  ];
+  courses: Course[] = [];
 
-  constructor() { }
+  constructor(private adminCoursesService: AdminCoursesService) { }
 
   ngOnInit(): void {
+    this.courses = this.adminCoursesService.getCourses();
   }
 
 }

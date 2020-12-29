@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Course } from 'src/app/shared/course.model';
+import { AdminCoursesService } from '../../admin-courses.service';
 
 @Component({
   selector: 'app-admin-course-item',
@@ -9,9 +10,13 @@ import { Course } from 'src/app/shared/course.model';
 export class AdminCourseItemComponent implements OnInit {
   @Input() course!: Course;
   
-  constructor() { }
+  constructor(private adminCoursesService: AdminCoursesService) { }
 
   ngOnInit(): void {
+  }
+
+  onSelected() {
+    this.adminCoursesService.selectedCourse.emit(this.course);
   }
 
 }
