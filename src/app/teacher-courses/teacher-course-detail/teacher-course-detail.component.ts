@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Course } from 'src/app/shared/course.model';
 import { Student } from 'src/app/shared/student.model';
+import { TeacherCoursesService } from '../teacher-courses.service';
 
 @Component({
   selector: 'app-teacher-course-detail',
@@ -7,22 +9,16 @@ import { Student } from 'src/app/shared/student.model';
   styleUrls: ['./teacher-course-detail.component.css']
 })
 export class TeacherCourseDetailComponent implements OnInit {
-  students: Student[] = [
-    new Student(1, "Daria", "M."),
-    new Student(1, "Daria", "M."),
-    new Student(1, "Daria", "M."),
-    new Student(1, "Daria", "M."),
-    new Student(1, "Daria", "M."),
-    new Student(1, "Daria", "M."),
-    new Student(1, "Daria", "M."),
-    new Student(1, "Daria", "M.")
-  ]
+  students: Student[] = [];
+
+  @Input() course!: Course;
 
   columnsToDisplay = ['name'];
 
-  constructor() { }
+  constructor(private teacherCoursesService: TeacherCoursesService) { }
 
   ngOnInit(): void {
+    this.students = this.teacherCoursesService.getStudents();
   }
 
 }

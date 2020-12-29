@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
       <div class="pull-left">
-        <h3>Course Name</h3>
+        <h3>{{ course.name }}</h3>
       </div>
       <div class="pull-right">
         <button class="btn btn-default">Edit</button>
@@ -11,7 +11,7 @@
 <hr>
 <div class="row">
   <div class="col-md-12">
-    <p>Description</p>
+    <p>{{ course.description }}</p>
   </div>
 </div>
 <div class="row">
@@ -32,7 +32,7 @@
           <td>Grade</td>
         </tr>
       </tbody>
-      <caption>Grades for (Course Name)</caption>
+      <caption>Grades for ({{ course.name }})</caption>
     </table>
   </div>
 </div>

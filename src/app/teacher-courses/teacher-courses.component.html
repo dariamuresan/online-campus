@@ -5,7 +5,12 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <app-teacher-course-detail></app-teacher-course-detail>
+        <app-teacher-course-detail
+        *ngIf="selectedCourse; else infoText"
+        [course]="selectedCourse"></app-teacher-course-detail>
+        <ng-template #infoText>
+            <p>Select a Course!</p>
+        </ng-template>
     </div>
 </div>
 <div class="row">
