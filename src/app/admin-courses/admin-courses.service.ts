@@ -4,10 +4,10 @@ import { Teacher } from "../shared/teacher.model";
 
 export class AdminCoursesService {
     courses: Course[] = [
-        new Course('Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
-        new Course('Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
-        new Course('Databases', 'Dan P.', 'SQL', 'DB')
-      ];
+      new Course(1, 'Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
+      new Course(2, 'Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
+      new Course(3, 'Databases', 'Dan P.', 'SQL', 'DB')
+    ];
 
     teachers: Teacher[] = [
         new Teacher(1, "Alexandru", "B."),

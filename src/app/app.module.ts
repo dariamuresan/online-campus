@@ -19,13 +19,19 @@ import { AdminCourseItemComponent } from './admin-courses/admin-course-list/admi
 import { AdminCourseEditComponent } from './admin-courses/admin-course-edit/admin-course-edit.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const appRoutes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'student', component: StudentCoursesComponent},
-  {path: 'teacher', component: TeacherCoursesComponent},
-  {path: 'admin', component: AdminCoursesComponent},
-  {path: 'teacher/course-detail', component: TeacherCourseDetailComponent},
+  {path: '', component: HomeComponent, pathMatch: 'full'},
+  {path: 'student-courses', component: StudentCoursesComponent},
+  {path: 'teacher-courses', component: TeacherCoursesComponent, children: [
+    {path: '', component: TeacherCourseListComponent},
+    {path: ':id', component: TeacherCourseDetailComponent},
+    {path: ':id/edit', component: TeacherCoursesEditComponent}
+  ]},
+  {path: 'admin-courses', component: AdminCoursesComponent},
+  {path: 'not-found', component: PageNotFoundComponent},
+  {path: '**', redirectTo: 'not-found'}
 ];
 
 @NgModule({
@@ -45,7 +51,8 @@ const appRoutes: Routes = [
     AdminCourseListComponent,
     AdminCourseItemComponent,
     AdminCourseEditComponent,
-    HomeComponent
+    HomeComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

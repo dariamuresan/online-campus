@@ -1,20 +1,11 @@
-<app-header (userSelected)=onNavigation($event)></app-header>
+<app-header></app-header>
 <div class="container">
   <div class="row">
-    <div class="col-md -12">
-      <app-home *ngIf="loadedUser === 'home'; else userAccount"></app-home>
-    </div>
+    <h3>Hello, User!</h3>
+    <hr>
   </div>
-  <ng-template #userAccount>
-    <div class="row">
-      <h3>Hello, User!</h3>
-      <hr>
-    </div>
-  </ng-template>
   <div class="row">
     <div class="col-md-12">
-      <app-student-courses *ngIf="loadedUser === 'student'"></app-student-courses>
-      <app-teacher-courses *ngIf="loadedUser === 'teacher'"></app-teacher-courses>
-      <app-admin-courses *ngIf="loadedUser === 'admin'"></app-admin-courses>
+      <router-outlet></router-outlet>
     </div>
   </div>

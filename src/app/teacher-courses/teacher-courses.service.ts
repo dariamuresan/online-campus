@@ -4,9 +4,9 @@ import { Student } from "../shared/student.model";
 
 export class TeacherCoursesService {
     courses: Course[] = [
-        new Course('Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
-        new Course('Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
-        new Course('Databases', 'Dan P.', 'SQL', 'DB')
+        new Course(1, 'Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
+        new Course(2, 'Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
+        new Course(3, 'Databases', 'Dan P.', 'SQL', 'DB')
     ];
 
     students: Student[] = [
@@ -24,6 +24,15 @@ export class TeacherCoursesService {
 
     getCourses() {
         return this.courses.slice();
+    }
+
+    getCourseWithId(id: number) {
+        for (let course of this.courses) {
+            if (course.ID == id)
+                return course;
+        }
+        
+        return this.courses[0];
     }
 
     getStudents() {
