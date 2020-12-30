@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'online-campus';
 
-  loadedUser = 'student';
+  loadedUser = 'home';
 
   onNavigation(user : string) {
     this.loadedUser = user;

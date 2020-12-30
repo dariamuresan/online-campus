@@ -17,6 +17,16 @@ import { AdminCoursesComponent } from './admin-courses/admin-courses.component';
 import { AdminCourseListComponent } from './admin-courses/admin-course-list/admin-course-list.component';
 import { AdminCourseItemComponent } from './admin-courses/admin-course-list/admin-course-item/admin-course-item.component';
 import { AdminCourseEditComponent } from './admin-courses/admin-course-edit/admin-course-edit.component';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+
+const appRoutes: Routes = [
+  {path: '', component: HomeComponent},
+  {path: 'student', component: StudentCoursesComponent},
+  {path: 'teacher', component: TeacherCoursesComponent},
+  {path: 'admin', component: AdminCoursesComponent},
+  {path: 'teacher/course-detail', component: TeacherCourseDetailComponent},
+];
 
 @NgModule({
   declarations: [
@@ -34,11 +44,13 @@ import { AdminCourseEditComponent } from './admin-courses/admin-course-edit/admi
     AdminCoursesComponent,
     AdminCourseListComponent,
     AdminCourseItemComponent,
-    AdminCourseEditComponent
+    AdminCourseEditComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [],
   bootstrap: [AppComponent]

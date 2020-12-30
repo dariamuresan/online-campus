@@ -1,9 +1,16 @@
 <app-header (userSelected)=onNavigation($event)></app-header>
 <div class="container">
   <div class="row">
-    <h3>Hello, User!</h3>
-    <hr>
+    <div class="col-md -12">
+      <app-home *ngIf="loadedUser === 'home'; else userAccount"></app-home>
+    </div>
   </div>
+  <ng-template #userAccount>
+    <div class="row">
+      <h3>Hello, User!</h3>
+      <hr>
+    </div>
+  </ng-template>
   <div class="row">
     <div class="col-md-12">
       <app-student-courses *ngIf="loadedUser === 'student'"></app-student-courses>
