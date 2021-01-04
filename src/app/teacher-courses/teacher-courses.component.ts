@@ -5,16 +5,13 @@ import { TeacherCoursesService } from './teacher-courses.service';
 @Component({
   selector: 'app-teacher-courses',
   templateUrl: './teacher-courses.component.html',
-  styleUrls: ['./teacher-courses.component.css'],
-  providers: [TeacherCoursesService]
+  styleUrls: ['./teacher-courses.component.css']
 })
 export class TeacherCoursesComponent implements OnInit {
-  selectedCourse!: Course;
 
   constructor(private teacherCoursesService: TeacherCoursesService) { }
 
   ngOnInit(): void {
-    this.teacherCoursesService.selectedCourse.subscribe( (course: Course) => { this.selectedCourse = course});
   }
 
 }

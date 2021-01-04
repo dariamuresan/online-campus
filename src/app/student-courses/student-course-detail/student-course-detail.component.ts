@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Course } from 'src/app/shared/course.model';
+import { StudentCoursesService } from '../student-courses.service';
 
 @Component({
   selector: 'app-student-course-detail',
@@ -7,12 +9,17 @@ import { Course } from 'src/app/shared/course.model';
   styleUrls: ['./student-course-detail.component.css']
 })
 export class StudentCourseDetailComponent implements OnInit {
-  @Input() course!: Course;
+  course!: Course;
+  courseID!: number;
   grade = 4;
 
-  constructor() { }
+  constructor(private studentCoursesService: StudentCoursesService, 
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe( (params: Params) => {
+      this.courseID = params['id']
+      this.course = this.studentCoursesService.getCourseWithID(this.courseID)} );
   }
 
 }

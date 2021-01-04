@@ -20,10 +20,16 @@ import { AdminCourseEditComponent } from './admin-courses/admin-course-edit/admi
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { StudentCoursesService } from './student-courses/student-courses.service';
+import { TeacherCoursesService } from './teacher-courses/teacher-courses.service';
+import { AdminCoursesService } from './admin-courses/admin-courses.service';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent, pathMatch: 'full'},
-  {path: 'student-courses', component: StudentCoursesComponent},
+  {path: 'student-courses', component: StudentCoursesComponent, children: [
+    {path: '', component: StudentCourseListComponent},
+    {path: ':id', component: StudentCourseDetailComponent},
+  ]},
   {path: 'teacher-courses', component: TeacherCoursesComponent, children: [
     {path: '', component: TeacherCourseListComponent},
     {path: ':id', component: TeacherCourseDetailComponent},
@@ -59,7 +65,10 @@ const appRoutes: Routes = [
     AppRoutingModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [
+    StudentCoursesService, 
+    TeacherCoursesService, 
+    AdminCoursesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

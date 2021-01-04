@@ -3,11 +3,6 @@
         <app-student-course-list></app-student-course-list>
     </div>
     <div class="col-md-7">
-        <app-student-course-detail
-        *ngIf="selectedCourse; else infoText"
-        [course]="selectedCourse"></app-student-course-detail>
-        <ng-template #infoText>
-            <p>Please Select A Course!</p>
-        </ng-template>
+        <router-outlet></router-outlet>
     </div>
 </div>

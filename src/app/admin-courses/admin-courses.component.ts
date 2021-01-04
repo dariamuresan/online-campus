@@ -5,8 +5,7 @@ import { AdminCoursesService } from './admin-courses.service';
 @Component({
   selector: 'app-admin-courses',
   templateUrl: './admin-courses.component.html',
-  styleUrls: ['./admin-courses.component.css'],
-  providers: [AdminCoursesService]
+  styleUrls: ['./admin-courses.component.css']
 })
 export class AdminCoursesComponent implements OnInit {
   courseSelected!: Course;

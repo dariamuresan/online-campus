@@ -18,6 +18,15 @@ export class StudentCoursesService {
         return this.courses.slice();
     }
 
+    getCourseWithID(id: number) {
+        for(let c of this.courses) {
+            if(c.ID == id)
+                return c;
+        }
+        
+        return this.courses[0];
+    }
+
     /*searchCourses() {
         saerch in the database for the courses your logged student is enrolled at
     }*/
