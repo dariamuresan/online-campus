@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Course } from 'src/app/shared/course.model';
 import { AdminCoursesService } from '../../admin-courses.service';
 
@@ -9,14 +10,13 @@ import { AdminCoursesService } from '../../admin-courses.service';
 })
 export class AdminCourseItemComponent implements OnInit {
   @Input() course!: Course;
+  courseID!: number;
   
-  constructor(private adminCoursesService: AdminCoursesService) { }
+  constructor(private adminCoursesService: AdminCoursesService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-  }
-
-  onSelected() {
-    this.adminCoursesService.selectedCourse.emit(this.course);
+    this.courseID = this.course.ID;
   }
 
 }

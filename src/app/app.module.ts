@@ -23,19 +23,24 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { StudentCoursesService } from './student-courses/student-courses.service';
 import { TeacherCoursesService } from './teacher-courses/teacher-courses.service';
 import { AdminCoursesService } from './admin-courses/admin-courses.service';
+import { CourseNotSelectedComponent } from './course-not-selected/course-not-selected.component';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent, pathMatch: 'full'},
   {path: 'student-courses', component: StudentCoursesComponent, children: [
-    {path: '', component: StudentCourseListComponent},
-    {path: ':id', component: StudentCourseDetailComponent},
+    {path: '', component: CourseNotSelectedComponent},
+    {path: ':id', component: StudentCourseDetailComponent}
   ]},
   {path: 'teacher-courses', component: TeacherCoursesComponent, children: [
     {path: '', component: TeacherCourseListComponent},
     {path: ':id', component: TeacherCourseDetailComponent},
     {path: ':id/edit', component: TeacherCoursesEditComponent}
   ]},
-  {path: 'admin-courses', component: AdminCoursesComponent},
+  {path: 'admin-courses', component: AdminCoursesComponent, children: [
+    {path: '', component: CourseNotSelectedComponent},
+    {path: ':id', component: AdminCourseEditComponent}
+    // {path: 'new', component: AdminCourseNewComponent}
+  ]},
   {path: 'not-found', component: PageNotFoundComponent},
   {path: '**', redirectTo: 'not-found'}
 ];
@@ -58,7 +63,8 @@ const appRoutes: Routes = [
     AdminCourseItemComponent,
     AdminCourseEditComponent,
     HomeComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    CourseNotSelectedComponent
   ],
   imports: [
     BrowserModule,

@@ -13,7 +13,6 @@ export class AdminCoursesComponent implements OnInit {
   constructor(private adminCoursesService: AdminCoursesService) { }
 
   ngOnInit(): void {
-    this.adminCoursesService.selectedCourse.subscribe( (course: Course) => {this.courseSelected = course});
   }
 
 }

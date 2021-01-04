@@ -29,4 +29,12 @@ export class AdminCoursesService {
     getTeachers() {
         return this.teachers.slice();
     }
+
+    getCourseWithId(id: number) {
+      for(let c of this.courses) {
+        if(c.ID == id) 
+        return c;
+      }
+      return this.courses[0];
+    }
 }
