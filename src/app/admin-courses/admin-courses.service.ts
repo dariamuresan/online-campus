@@ -32,7 +32,7 @@ export class AdminCoursesService {
 
     getCourseWithId(id: number) {
       for(let c of this.courses) {
-        if(c.ID == id) 
+        if(c.id == id) 
         return c;
       }
       return this.courses[0];
