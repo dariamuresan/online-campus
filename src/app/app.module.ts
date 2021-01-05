@@ -24,6 +24,7 @@ import { StudentCoursesService } from './student-courses/student-courses.service
 import { TeacherCoursesService } from './teacher-courses/teacher-courses.service';
 import { AdminCoursesService } from './admin-courses/admin-courses.service';
 import { CourseNotSelectedComponent } from './course-not-selected/course-not-selected.component';
+import { AdminNewCourseComponent } from './admin-courses/admin-new-course/admin-new-course.component';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent, pathMatch: 'full'},
@@ -38,8 +39,8 @@ const appRoutes: Routes = [
   ]},
   {path: 'admin-courses', component: AdminCoursesComponent, children: [
     {path: '', component: CourseNotSelectedComponent},
+    {path: 'new', component: AdminNewCourseComponent},
     {path: ':id', component: AdminCourseEditComponent}
-    // {path: 'new', component: AdminCourseNewComponent}
   ]},
   {path: 'not-found', component: PageNotFoundComponent},
   {path: '**', redirectTo: 'not-found'}
@@ -64,7 +65,8 @@ const appRoutes: Routes = [
     AdminCourseEditComponent,
     HomeComponent,
     PageNotFoundComponent,
-    CourseNotSelectedComponent
+    CourseNotSelectedComponent,
+    AdminNewCourseComponent
   ],
   imports: [
     BrowserModule,
