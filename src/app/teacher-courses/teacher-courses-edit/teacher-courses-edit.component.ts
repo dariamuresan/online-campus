@@ -19,7 +19,18 @@ export class TeacherCoursesEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params
-      .subscribe( (params: Params) => { this.id = +params['id']; this.course = this.teacherCoursesService.getCourseWithId(this.id)})
+      .subscribe( 
+        (params: Params) => 
+        { 
+          this.id = +params['id'];
+          
+          let currentCourse = this.teacherCoursesService.getCourseWithId(this.id);
+          if(currentCourse != null){
+            this.course = currentCourse;
+          }
+           
+        }
+      );
 
     this.students = this.teacherCoursesService.getStudents(); // students with course id THIS.ID
   }

@@ -24,6 +24,8 @@ import { StudentCoursesService } from './student-courses/student-courses.service
 import { TeacherCoursesService } from './teacher-courses/teacher-courses.service';
 import { AdminCoursesService } from './admin-courses/admin-courses.service';
 import { CourseNotSelectedComponent } from './course-not-selected/course-not-selected.component';
+import { AddStudentToCourseComponent } from './teacher-courses/add-student-to-course/add-student-to-course.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent, pathMatch: 'full'},
@@ -34,7 +36,8 @@ const appRoutes: Routes = [
   {path: 'teacher-courses', component: TeacherCoursesComponent, children: [
     {path: '', component: TeacherCourseListComponent},
     {path: ':id', component: TeacherCourseDetailComponent},
-    {path: ':id/edit', component: TeacherCoursesEditComponent}
+    {path: ':id/edit', component: TeacherCoursesEditComponent},
+    {path: ':id/new', component: TeacherCoursesEditComponent}
   ]},
   {path: 'admin-courses', component: AdminCoursesComponent, children: [
     {path: '', component: CourseNotSelectedComponent},
@@ -64,11 +67,13 @@ const appRoutes: Routes = [
     AdminCourseEditComponent,
     HomeComponent,
     PageNotFoundComponent,
-    CourseNotSelectedComponent
+    CourseNotSelectedComponent,
+    AddStudentToCourseComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [

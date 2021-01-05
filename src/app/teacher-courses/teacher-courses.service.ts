@@ -1,41 +1,36 @@
-import { EventEmitter } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
+import { CourseService } from "../course.service";
+import { EnrollmentService } from "../enrollment.service";
 import { Course } from "../shared/course.model";
 import { Student } from "../shared/student.model";
+import { StudentService } from "../student.service";
 
+@Injectable()
 export class TeacherCoursesService {
-    courses: Course[] = [
-        new Course(1, 'Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
-        new Course(2, 'Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
-        new Course(3, 'Databases', 'Dan P.', 'SQL', 'DB')
-    ];
-
-    students: Student[] = [
-        new Student(1, "Daria", "M."),
-        new Student(1, "Daria", "N."),
-        new Student(1, "Daria", "O."),
-        new Student(1, "Daria", "P."),
-        new Student(1, "Daria", "Q."),
-        new Student(1, "Daria", "R."),
-        new Student(1, "Daria", "S."),
-        new Student(1, "Daria", "T.")
-      ];
 
     selectedCourse = new EventEmitter<Course>();
 
-    getCourses() {
-        return this.courses.slice();
+    constructor(private studentService:StudentService, private courseService:CourseService, private enrollmentService:EnrollmentService){}
+
+    getCourses():Course[] {
+        return this.courseService.getCourses();
     }
 
-    getCourseWithId(id: number) {
-        for (let course of this.courses) {
-            if (course.id == id)
-                return course;
-        }
-        
-        return this.courses[0];
+    getCourseWithId(id: number):Course{
+        return this.courseService.getCourseWithId(id);
     }
 
     getStudents() {
-        return this.students.slice();
+        return this.studentService.getStudents();
+    }
+
+    getStudentByEmail(email:string):Student{
+        return this.studentService.getStudentByEmail(email);
+    }
+
+    addStudentToCourse(studentEmail:string, courseId:number){
+        let student = this.getStudentByEmail(studentEmail);
+        let course = this.getCourseWithId(courseId);
+        this.enrollmentService.addEnrollment(student, course, 0);
     }
 }
