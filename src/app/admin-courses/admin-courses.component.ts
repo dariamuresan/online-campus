@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Course } from '../shared/course.model';
 import { AdminCoursesService } from './admin-courses.service';
 
@@ -10,9 +11,19 @@ import { AdminCoursesService } from './admin-courses.service';
 export class AdminCoursesComponent implements OnInit {
   courseSelected!: Course;
 
-  constructor(private adminCoursesService: AdminCoursesService) { }
+  constructor(private adminCoursesService: AdminCoursesService,
+              private route: ActivatedRoute,
+              private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  onNewCourse() {
+    this.router.navigate(['new'], {relativeTo: this.route});
+  }
+
+  onCreateAccount() {
+    // not implemented yet
   }
 
 }

@@ -32,4 +32,7 @@ export class EnrollmentService{
             .map(enrollment => enrollment.student);
     }
     
+    getEnrollmentsInCourse(courseId:number):Enrollment[]{
+        return this.enrollments.filter(enrollment => enrollment.course.id === courseId);
+    }
 }

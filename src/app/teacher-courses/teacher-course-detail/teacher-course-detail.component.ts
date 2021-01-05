@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { EnrollmentService } from 'src/app/enrollment.service';
 import { Course } from 'src/app/shared/course.model';
+import { Enrollment } from 'src/app/shared/enrollment.model';
 import { Student } from 'src/app/shared/student.model';
 import { TeacherCoursesService } from '../teacher-courses.service';
 
@@ -11,7 +12,7 @@ import { TeacherCoursesService } from '../teacher-courses.service';
   styleUrls: ['./teacher-course-detail.component.css']
 })
 export class TeacherCourseDetailComponent implements OnInit {
-  students: Student[] = [];
+  enrollments: Enrollment[] = [];
   id!: number;
 
   course!: Course;
@@ -38,7 +39,7 @@ export class TeacherCourseDetailComponent implements OnInit {
         }
       );
 
-    this.students = this.enrollmentService.getStudentsEnrolledInCourse(this.id);
+    this.enrollments = this.enrollmentService.getEnrollmentsInCourse(this.id);
   }
 
   onEditCourse() {

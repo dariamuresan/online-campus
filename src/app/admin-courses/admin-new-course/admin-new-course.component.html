@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-md-12">
+        <h4>New Course Form</h4>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <form>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Course Name</label>
+                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Insert Course Name here">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput2">Abreviation</label>
+                <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="Insert Course Abreviation (eg. SSD)">
+              </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Teacher</label>
+                <select class="form-control" id="exampleFormControlSelect1">
+                <option
+                *ngFor="let teacher of teachers">{{ teacher.firstName }} {{ teacher.lastName }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">Description</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Course Details and Description"></textarea>
+            </div>
+            <button class="btn btn-success pull-right" type="submit">Create</button>
+            <button class="btn btn-dark" type="button">Cancel</button>
+        </form>
+    </div>
+</div>
