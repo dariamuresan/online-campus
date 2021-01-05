@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-xs-12">
+        <app-student-course-item 
+        *ngFor="let courseElm of courses"
+        [course]="courseElm"></app-student-course-item>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-default">Add a Course</button>
+    </div>
+</div>
+

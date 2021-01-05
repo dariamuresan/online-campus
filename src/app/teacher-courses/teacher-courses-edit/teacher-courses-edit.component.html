@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-md-12">
+      <h3>{{ course.abreviation }} grades</h3>
+      <hr>
+        <form>
+            <div 
+            class="row"
+            *ngFor="let student of students">
+              <div class="col-md-3">
+                <h5>{{ student.firstName }} {{ student.lastName }}</h5>
+              </div>
+              <div class="col-md-2">
+                <input type="number" class="form-control" placeholder="Grade">
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-5">
+                <button type="submit" class="btn btn-success pull-right">Apply</button>
+                <button type="button" class="btn btn-dark pull-right">Clear All</button>
+              </div>
+            </div>
+        </form>
+    </div>
+</div>
