@@ -38,7 +38,7 @@ const appRoutes: Routes = [
     {path: '', component: TeacherCourseListComponent},
     {path: ':id', component: TeacherCourseDetailComponent},
     {path: ':id/edit', component: TeacherCoursesEditComponent},
-    {path: ':id/new', component: TeacherCoursesEditComponent}
+    {path: ':id/new', component: AddStudentToCourseComponent}
   ]},
   {path: 'admin-courses', component: AdminCoursesComponent, children: [
     {path: '', component: CourseNotSelectedComponent},

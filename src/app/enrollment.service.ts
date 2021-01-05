@@ -6,6 +6,7 @@ import { Student } from "./shared/student.model";
 import { StudentService } from "./student.service";
 @Injectable({providedIn:'root'})
 export class EnrollmentService{
+    
     enrollments!:Enrollment[];
 
     constructor(private studentService:StudentService, private courseService:CourseService){
@@ -34,5 +35,16 @@ export class EnrollmentService{
     
     getEnrollmentsInCourse(courseId:number):Enrollment[]{
         return this.enrollments.filter(enrollment => enrollment.course.id === courseId);
+    }
+
+    updateGrade(student: Student, course: Course, grade: number):void{
+        const studentId = student.id;
+        const courseId = course.id;
+        for(let enrollment of this.enrollments){
+            if(enrollment.course.id == courseId && enrollment.student.id == studentId){
+                enrollment.grade = grade;
+                break;
+            }
+        }
     }
 }
