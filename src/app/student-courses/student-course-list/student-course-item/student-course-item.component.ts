@@ -16,7 +16,7 @@ export class StudentCourseItemComponent implements OnInit {
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.courseID = this.course.ID;
+    this.courseID = this.course.id;
   }
 
 }

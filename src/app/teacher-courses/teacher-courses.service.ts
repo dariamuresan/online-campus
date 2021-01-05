@@ -28,7 +28,7 @@ export class TeacherCoursesService {
 
     getCourseWithId(id: number) {
         for (let course of this.courses) {
-            if (course.ID == id)
+            if (course.id == id)
                 return course;
         }
         

@@ -14,7 +14,7 @@ export class TeacherCourseItemComponent implements OnInit {
   constructor(private teacherCoursesService: TeacherCoursesService) { }
 
   ngOnInit(): void {
-    this.id = this.course.ID;
+    this.id = this.course.id;
   }
 
 }
