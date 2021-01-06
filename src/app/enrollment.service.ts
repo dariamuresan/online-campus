@@ -24,8 +24,18 @@ export class EnrollmentService{
         ];
     }
 
+    existsEnrollment(student:Student, course:Course):boolean{
+        for(let enrollment of this.enrollments){
+            if(enrollment.student.id == student.id && enrollment.course.id == course.id){
+                return true;
+            }
+        }
+        return false;
+    }
+
     addEnrollment(student:Student, course:Course, grade:number){
-        this.enrollments.push(new Enrollment(student, course, grade));
+        if(!this.existsEnrollment(student, course))
+            this.enrollments.push(new Enrollment(student, course, grade));
     }
 
     getStudentsEnrolledInCourse(courseId:number):Student[]{

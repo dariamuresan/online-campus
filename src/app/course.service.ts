@@ -37,4 +37,19 @@ export class CourseService{
         
         return this.courses[0];
     }
+
+    updateCourse(courseId: number, newCourse: Course):void{
+        for(let i = 0; i < this.courses.length; i++){
+            let course = this.courses[i];
+            if(course.id == courseId){
+                this.courses[i] = newCourse;
+                break;
+            }
+        }
+    }
+
+    deleteCourse(courseId:number):void{
+        console.log(courseId);
+        this.courses = this.courses.filter(course => course.id != courseId);
+    }
 }

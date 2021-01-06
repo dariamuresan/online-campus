@@ -7,10 +7,10 @@ import { TeacherService } from "../teacher.service";
 
 @Injectable()
 export class AdminCoursesService {
-  
+    
     selectedCourse = new EventEmitter<Course>();
 
-    addedCourse = new Subject<void>();
+    changedCourses = new Subject<void>();
 
     constructor(private courseService:CourseService, private teacherService:TeacherService){}
 
@@ -24,7 +24,7 @@ export class AdminCoursesService {
 
     addCourse(course:Course):void{
       this.courseService.addCourse(course);
-      this.addedCourse.next();
+      this.changedCourses.next();
     }
 
     getCourseWithId(id: number) {
@@ -37,5 +37,15 @@ export class AdminCoursesService {
 
     getTeacherById(id:number):Teacher{
       return this.teacherService.getTeacherById(id);
+    }
+
+    updateCourse(courseId: number, course: Course) {
+      this.courseService.updateCourse(courseId, course);
+      this.changedCourses.next();
+    }
+
+    deleteCourse(courseId:number){
+      this.courseService.deleteCourse(courseId);
+      this.changedCourses.next();
     }
 }
