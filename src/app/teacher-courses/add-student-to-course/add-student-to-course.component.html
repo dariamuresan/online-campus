@@ -10,14 +10,8 @@
     <div class="row">
         <div class="col-12">
             <button type = "submit" class = "btn btn-primary" [disabled] = "addForm.invalid">Submit</button>
+            <button class = "btn btn-default" [routerLink] = "['/teacher-courses', id]">Cancel</button>
         </div>
     </div>
     
 </form>
-
-<br><br>
-<div class="row">
-    <div class="col-12">
-        <button class = "btn btn-default" [routerLink] = "['/teacher-courses', id]">Back to Course</button>
-    </div>
-</div>
