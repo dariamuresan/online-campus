@@ -1,40 +1,41 @@
-import { EventEmitter } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
+import { Subject } from "rxjs";
+import { CourseService } from "../course.service";
 import { Course } from "../shared/course.model";
 import { Teacher } from "../shared/teacher.model";
+import { TeacherService } from "../teacher.service";
 
+@Injectable()
 export class AdminCoursesService {
-    courses: Course[] = [
-      new Course(1, 'Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
-      new Course(2, 'Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
-      new Course(3, 'Databases', 'Dan P.', 'SQL', 'DB')
-    ];
-
-    teachers: Teacher[] = [
-        new Teacher(1, "Alexandru", "B."),
-        new Teacher(2, "Alexandru", "C."),
-        new Teacher(3, "Alexandru", "D."),
-        new Teacher(4, "Alexandru", "E."),
-        new Teacher(5, "Alexandru", "F."),
-        new Teacher(6, "Alexandru", "G."),
-        new Teacher(7, "Alexandru", "H."),
-        new Teacher(8, "Alexandru", "I.")
-      ];
-
+  
     selectedCourse = new EventEmitter<Course>();
 
+    addedCourse = new Subject<void>();
+
+    constructor(private courseService:CourseService, private teacherService:TeacherService){}
+
     getCourses() {
-        return this.courses.slice();
+        return this.courseService.getCourses();
     }
 
     getTeachers() {
-        return this.teachers.slice();
+        return this.teacherService.getTeachers();
+    }
+
+    addCourse(course:Course):void{
+      this.courseService.addCourse(course);
+      this.addedCourse.next();
     }
 
     getCourseWithId(id: number) {
-      for(let c of this.courses) {
-        if(c.id == id) 
-        return c;
-      }
-      return this.courses[0];
+        return this.courseService.getCourseWithId(id);  
+    }
+
+    getNextId():number{
+      return this.courseService.getNextId();
+    }
+
+    getTeacherById(id:number):Teacher{
+      return this.teacherService.getTeacherById(id);
     }
 }

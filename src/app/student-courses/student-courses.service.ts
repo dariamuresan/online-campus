@@ -1,30 +1,23 @@
-import { EventEmitter } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
+import { CourseService } from "../course.service";
 import { Course } from "../shared/course.model";
 import { Student } from "../shared/student.model";
 
+@Injectable()
 export class StudentCoursesService {
     //private loggedStudent!: Student;
 
-    courses: Course[] = [
-        new Course(1, 'Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
-        new Course(2, 'Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
-        new Course(3, 'Databases', 'Dan P.', 'SQL', 'DB')
-    ];
-
     courseSelected = new EventEmitter<Course>();
+
+    constructor(private courseService:CourseService){}
 
     getCourses() {
         // return this.loggedStudent.getCourses();
-        return this.courses.slice();
+        return this.courseService.getCourses();
     }
 
     getCourseWithID(id: number) {
-        for(let c of this.courses) {
-            if(c.id == id)
-                return c;
-        }
-        
-        return this.courses[0];
+        return this.courseService.getCourseWithId(id);
     }
 
     /*searchCourses() {
