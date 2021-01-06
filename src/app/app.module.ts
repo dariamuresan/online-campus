@@ -30,28 +30,6 @@ import { AdminNewCourseComponent } from './admin-courses/admin-new-course/admin-
 import { LoginComponent } from './authentication/login/login.component';
 import { HelloUserComponent } from './hello-user/hello-user.component';
 
-const appRoutes: Routes = [
-  {path: '', component: HomeComponent, pathMatch: 'full'},
-  {path: 'login', component: LoginComponent},
-  {path: 'student-courses', component: StudentCoursesComponent, children: [
-    {path: '', component: CourseNotSelectedComponent},
-    {path: ':id', component: StudentCourseDetailComponent}
-  ]},
-  {path: 'teacher-courses', component: TeacherCoursesComponent, children: [
-    {path: '', component: TeacherCourseListComponent},
-    {path: ':id', component: TeacherCourseDetailComponent},
-    {path: ':id/edit', component: TeacherCoursesEditComponent},
-    {path: ':id/new', component: AddStudentToCourseComponent}
-  ]},
-  {path: 'admin-courses', component: AdminCoursesComponent, children: [
-    {path: '', component: CourseNotSelectedComponent},
-    {path: 'new', component: AdminNewCourseComponent},
-    {path: ':id', component: AdminCourseEditComponent}
-  ]},
-  {path: 'not-found', component: PageNotFoundComponent},
-  {path: '**', redirectTo: 'not-found'}
-];
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -82,8 +60,7 @@ const appRoutes: Routes = [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    FormsModule,
-    RouterModule.forRoot(appRoutes)
+    FormsModule
   ],
   providers: [
     StudentCoursesService, 
