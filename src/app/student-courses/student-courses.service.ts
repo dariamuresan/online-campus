@@ -20,7 +20,7 @@ export class StudentCoursesService {
 
     getCourseWithID(id: number) {
         for(let c of this.courses) {
-            if(c.ID == id)
+            if(c.id == id)
                 return c;
         }
         
