@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { EMPTY } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { AuthService } from 'src/app/authentication/auth.service';
 import { Course } from 'src/app/shared/course.model';
+import { User } from 'src/app/shared/user.model';
 import { StudentCoursesService } from '../student-courses.service';
 
 @Component({
@@ -10,10 +14,17 @@ import { StudentCoursesService } from '../student-courses.service';
 export class StudentCourseListComponent implements OnInit {
   courses!: Course[];
 
-  constructor(private studemtCoursesService: StudentCoursesService) { }
+  constructor(private studentCoursesService: StudentCoursesService, private authService:AuthService) { }
 
   ngOnInit(): void {
-    this.courses = this.studemtCoursesService.getCourses();
+    this.authService.user.pipe(
+      switchMap((user:User | null) => {
+        if(!user)
+          return EMPTY;
+        
+        return this.studentCoursesService.getCoursesForStudent(user.id);
+      })
+    ).subscribe();
   }
 
 }

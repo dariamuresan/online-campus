@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { EnrollmentService } from 'src/app/enrollment.service';
 import { Course } from 'src/app/shared/course.model';
 import { Enrollment } from 'src/app/shared/enrollment.model';
@@ -13,9 +15,9 @@ import { TeacherCoursesService } from '../teacher-courses.service';
 })
 export class TeacherCourseDetailComponent implements OnInit {
   enrollments: Enrollment[] = [];
-  id!: number;
+  id!: string;
 
-  course!: Course;
+  course!: Course | null;
 
   columnsToDisplay = ['name'];
 
@@ -24,22 +26,29 @@ export class TeacherCourseDetailComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router) { }
 
-  ngOnInit(): void {
-    this.route.params
-      .subscribe( 
-        (params: Params) => 
-        { 
-          this.id = +params['id'];
-          
-          let currentCourse = this.teacherCoursesService.getCourseWithId(this.id);
-          if(currentCourse != null){
-            this.course = currentCourse;
-          }
-           
-        }
-      );
+  private observeRouteForCourse():void{
+    this.route.params.pipe(
+      map((params:Params) => {
+        return params['id'];
+      }),
+      tap((courseId:string) => {
+        this.id = courseId;
+      }),
+      switchMap((courseId:string) => {
+        return forkJoin([this.teacherCoursesService.getCourseWithId(courseId), this.enrollmentService.getEnrollmentsInCourse(courseId)]);
+      })
+    ).subscribe( 
+       (result:any[]) => {
+         this.course = result[0];
+         this.enrollments = result[1];
+       }
+    );
+  }
+  
 
-    this.enrollments = this.enrollmentService.getEnrollmentsInCourse(this.id);
+  ngOnInit(): void {
+    this.observeRouteForCourse();
+    //this.enrollments = this.enrollmentService.getEnrollmentsInCourse(this.id);
   }
 
   onEditCourse() {

@@ -1,4 +1,6 @@
 import { EventEmitter, Injectable } from "@angular/core";
+import { forkJoin, Observable } from "rxjs";
+import { switchMap } from "rxjs/operators";
 import { CourseService } from "../course.service";
 import { EnrollmentService } from "../enrollment.service";
 import { Course } from "../shared/course.model";
@@ -12,25 +14,40 @@ export class TeacherCoursesService {
 
     constructor(private studentService:StudentService, private courseService:CourseService, private enrollmentService:EnrollmentService){}
 
-    getCourses():Course[] {
+    getCourses():Observable<Course[]> {
         return this.courseService.getCourses();
     }
 
-    getCourseWithId(id: number):Course{
+    getCoursesByTeacher(teacherId:string){
+        return this.courseService.getCoursesByTeacher(teacherId);
+    }
+
+    getCourseWithId(id: string):Observable<Course | null>{
         return this.courseService.getCourseWithId(id);
     }
 
-    getStudents() {
+    getStudents():Observable<Student[]>{
         return this.studentService.getStudents();
     }
 
-    getStudentByEmail(email:string):Student{
+    getStudentByEmail(email:string):Observable<Student | null>{
         return this.studentService.getStudentByEmail(email);
     }
 
-    addStudentToCourse(studentEmail:string, courseId:number){
-        let student = this.getStudentByEmail(studentEmail);
-        let course = this.getCourseWithId(courseId);
-        this.enrollmentService.addEnrollment(student, course, 0);
+    private studentFromEmailAndCourseFromIdRetrieverObservable(studentEmail:string, courseId:string):Observable<any[]>{
+        const studentObservable = this.getStudentByEmail(studentEmail);
+        const courseObservable = this.getCourseWithId(courseId);
+        return forkJoin([studentObservable, courseObservable]);
+    }
+
+    addStudentToCourse(studentEmail:string, courseId:string):Observable<any>{
+        
+        
+        return this.studentFromEmailAndCourseFromIdRetrieverObservable(studentEmail, courseId).pipe(
+            switchMap((studentAndCourse:any[]) => {
+                const student = studentAndCourse[0];
+                const course = studentAndCourse[1];
+                return this.enrollmentService.addEnrollment(student, course, 0);
+            }));
     }
 }

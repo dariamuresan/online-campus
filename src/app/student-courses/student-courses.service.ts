@@ -1,30 +1,29 @@
-import { EventEmitter } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { CourseService } from "../course.service";
+import { EnrollmentService } from "../enrollment.service";
 import { Course } from "../shared/course.model";
 import { Student } from "../shared/student.model";
 
+@Injectable()
 export class StudentCoursesService {
     //private loggedStudent!: Student;
 
-    courses: Course[] = [
-        new Course(1, 'Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
-        new Course(2, 'Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
-        new Course(3, 'Databases', 'Dan P.', 'SQL', 'DB')
-    ];
-
     courseSelected = new EventEmitter<Course>();
 
-    getCourses() {
-        // return this.loggedStudent.getCourses();
-        return this.courses.slice();
+    constructor(private courseService:CourseService, private enrollmentService:EnrollmentService){}
+
+    getCoursesForStudent(studentId:string):Observable<Course[]>{
+        return this.enrollmentService.getCoursesForStudent(studentId);
     }
 
-    getCourseWithID(id: number) {
-        for(let c of this.courses) {
-            if(c.id == id)
-                return c;
-        }
-        
-        return this.courses[0];
+    getCourses():Observable<Course[]>{
+        // return this.loggedStudent.getCourses();
+        return this.courseService.getCourses();
+    }
+
+    getCourseWithID(id: string): Observable<Course | null> {
+        return this.courseService.getCourseWithId(id);
     }
 
     /*searchCourses() {

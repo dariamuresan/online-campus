@@ -1,4 +1,7 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { CourseService } from "./course.service";
 import { Course } from "./shared/course.model";
 import { Enrollment } from "./shared/enrollment.model";
@@ -9,8 +12,8 @@ export class EnrollmentService{
     
     enrollments!:Enrollment[];
 
-    constructor(private studentService:StudentService, private courseService:CourseService){
-        this.enrollments = [
+    constructor(private studentService:StudentService, private courseService:CourseService, private httpClient:HttpClient){
+        /*this.enrollments = [
             new Enrollment(this.studentService.getStudentById(1), this.courseService.getCourseWithId(1), 4),
             new Enrollment(this.studentService.getStudentById(2), this.courseService.getCourseWithId(1), 6),
             new Enrollment(this.studentService.getStudentById(3), this.courseService.getCourseWithId(1), 2),
@@ -21,30 +24,78 @@ export class EnrollmentService{
             new Enrollment(this.studentService.getStudentById(5), this.courseService.getCourseWithId(2), 9),
             new Enrollment(this.studentService.getStudentById(2), this.courseService.getCourseWithId(3), 2),
             new Enrollment(this.studentService.getStudentById(3), this.courseService.getCourseWithId(3), 8),
-        ];
+        ];*/
     }
 
-    addEnrollment(student:Student, course:Course, grade:number){
-        this.enrollments.push(new Enrollment(student, course, grade));
-    }
-
-    getStudentsEnrolledInCourse(courseId:number):Student[]{
-        return this.enrollments.filter(enrollment => enrollment.course.id === courseId)
-            .map(enrollment => enrollment.student);
-    }
-    
-    getEnrollmentsInCourse(courseId:number):Enrollment[]{
-        return this.enrollments.filter(enrollment => enrollment.course.id === courseId);
-    }
-
-    updateGrade(student: Student, course: Course, grade: number):void{
+    existsEnrollment(student:Student, course:Course):Observable<boolean>{
         const studentId = student.id;
         const courseId = course.id;
-        for(let enrollment of this.enrollments){
-            if(enrollment.course.id == courseId && enrollment.student.id == studentId){
-                enrollment.grade = grade;
-                break;
-            }
-        }
+        
+        return this.existsEnrollmentByStudentIdAndCourseId(studentId, courseId);
+    }
+
+    existsEnrollmentByStudentIdAndCourseId(studentId:string, courseId:string):Observable<boolean>{
+        return this.getEnrollmentsInCourse(courseId).pipe(
+            map((enrollments:Enrollment[]) => {
+                return enrollments.map(enrollment => enrollment.student.id).some(id => id === studentId);
+            })
+        )
+    }
+
+    addEnrollment(student:Student, course:Course, grade:number):Observable<any>{
+        
+        const courseId = course.id;
+        const studentId = student.id;
+        let newEnrollmentWithIdKey:{[key:string]:Enrollment}= {};
+        newEnrollmentWithIdKey[`${studentId}_${courseId}`] = new Enrollment(student, course, grade);
+        return this.httpClient.put(`https://online-campus-cc35b-default-rtdb.firebaseio.com/enrollments/${studentId}_${courseId}.json`, new Enrollment(student, course, grade));
+    }
+
+    getStudentsEnrolledInCourse(courseId:string):Observable<Student[]>{
+        return this.getEnrollmentsInCourse(courseId).pipe(
+            map((enrollments:Enrollment[]) => {
+                return enrollments.map(enrollment => enrollment.student);
+            })
+        );
+    }
+    
+    getCoursesForStudent(studentId:string):Observable<Course[]>{
+        return this.getEnrollmentsForStudent(studentId).pipe(
+            map((enrollments:Enrollment[]) => {
+                return this.enrollments.map(enrollment => enrollment.course);
+            })
+        );
+    }
+
+    getEnrollmentsForStudent(studentId:string):Observable<Enrollment[]>{
+        return this.httpClient.get<{[key:string] : Enrollment}>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/enrollments.json?orderBy="student/id"&equalTo="${studentId}"`).pipe(
+            map((enrollmentsResponse) => {
+                
+                let result:Enrollment[] = [];
+                for(const key in enrollmentsResponse)
+                    result.push(Enrollment.getEnrollmentInstance(enrollmentsResponse[key]));
+                return result;
+            })
+        );
+    }
+
+    getEnrollmentsInCourse(courseId:string):Observable<Enrollment[]>{
+        return this.httpClient.get<{[key:string] : Enrollment}>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/enrollments.json?orderBy="course/id"&equalTo="${courseId}"`).pipe(
+            map((enrollmentsResponse) => {
+                
+                let result:Enrollment[] = [];
+                for(const key in enrollmentsResponse)
+                    result.push(Enrollment.getEnrollmentInstance(enrollmentsResponse[key]));
+                return result;
+            })
+        );
+    }
+
+    updateGrade(student: Student, course: Course, grade: number):Observable<any>{
+        const courseId = course.id;
+        const studentId = student.id;
+        let newEnrollmentWithIdKey:{[key:string]:Enrollment}= {};
+        newEnrollmentWithIdKey[`${studentId}_${courseId}`] = new Enrollment(student, course, grade);
+        return this.httpClient.put(`https://online-campus-cc35b-default-rtdb.firebaseio.com/enrollments/${studentId}_${courseId}.json`, new Enrollment(student, course, grade));
     }
 }

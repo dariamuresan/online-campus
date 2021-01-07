@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { concatMap, mergeMap } from 'rxjs/operators';
 import { Course } from 'src/app/shared/course.model';
 import { AdminCoursesService } from '../admin-courses.service';
 
@@ -7,13 +9,31 @@ import { AdminCoursesService } from '../admin-courses.service';
   templateUrl: './admin-course-list.component.html',
   styleUrls: ['./admin-course-list.component.css']
 })
-export class AdminCourseListComponent implements OnInit {
+export class AdminCourseListComponent implements OnInit, OnDestroy {
   courses: Course[] = [];
+
+  changedCourseObserver!:Subscription;
 
   constructor(private adminCoursesService: AdminCoursesService) { }
 
   ngOnInit(): void {
-    this.courses = this.adminCoursesService.getCourses();
+    this.adminCoursesService.getCourses().subscribe(
+      (courses:Course[]) => {
+        this.courses = courses;
+      }
+    );
+    this.changedCourseObserver = 
+      this.adminCoursesService.changedCourses.pipe(
+        concatMap(() => {
+          return this.adminCoursesService.getCourses();
+        })).subscribe(
+          (courses:Course[]) => {
+            this.courses = courses;
+          });
+  }
+
+  ngOnDestroy():void{
+    this.changedCourseObserver.unsubscribe();
   }
 
 }

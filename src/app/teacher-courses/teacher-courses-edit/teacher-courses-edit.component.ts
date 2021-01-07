@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { EnrollmentService } from 'src/app/enrollment.service';
 import { Course } from 'src/app/shared/course.model';
 import { Enrollment } from 'src/app/shared/enrollment.model';
@@ -14,9 +16,10 @@ import { TeacherCoursesService } from '../teacher-courses.service';
 })
 export class TeacherCoursesEditComponent implements OnInit {
   students: Student[] = [];
-  course!: Course;
-  id!: number;
+  course!: Course | null;
+  id!: string;
   editForm!:FormGroup;
+  loadingObservables:number = 0;
   constructor(private teacherCoursesService: TeacherCoursesService,
               private enrollmentService: EnrollmentService,
               private route: ActivatedRoute,
@@ -44,30 +47,34 @@ export class TeacherCoursesEditComponent implements OnInit {
       'grades': this.getFormArrayFromEnrollments(enrollmentsInCourse)
     })
   }
-
-  private initCourse():void{
-    let currentCourse = this.teacherCoursesService.getCourseWithId(this.id);
-    if(currentCourse != null){
-      this.course = currentCourse;
-    }
-  }
   
-  private init():void{
-    let enrollmentsInCourse = this.enrollmentService.getEnrollmentsInCourse(this.id);
-    this.initStudentArray(enrollmentsInCourse);
-    this.initForm(enrollmentsInCourse);
-    this.initCourse();
+  private initObservable():Observable<Course | null>{
+    return this.enrollmentService.getEnrollmentsInCourse(this.id).pipe(
+      tap((enrollmentsInCourse:Enrollment[]) => {
+        this.initStudentArray(enrollmentsInCourse);
+        this.initForm(enrollmentsInCourse);
+      }),
+      switchMap(() => {
+        return this.teacherCoursesService.getCourseWithId(this.id);
+      })
+    );
   }
 
   ngOnInit(): void {
-    this.id = +this.route.snapshot.params['id'];
-    this.init();
-    this.route.params
-      .subscribe( 
-        (params: Params) => 
-        { 
-          this.id = +params['id'];
-          this.init();
+    this.id = this.route.snapshot.params['id'];
+    this.route.params.pipe(
+      map((params:Params) => {
+        return params['id'];
+      }),
+      tap((id:string) => {
+        this.id = id;
+      }),
+      switchMap((id:string) => {
+        return this.initObservable();
+      })
+    ).subscribe(
+        (course:Course | null) => { 
+          this.course = course;
         }
       );
   }
@@ -86,9 +93,10 @@ export class TeacherCoursesEditComponent implements OnInit {
       for(let i = 0; i < gradesFormArray.length; i++){
         let currentGrade = gradesFormArray[i].grade;
         let currentStudent = this.students[i];
-        this.enrollmentService.updateGrade(currentStudent, this.course, currentGrade);
+        if(this.course != null)
+          this.enrollmentService.updateGrade(currentStudent, this.course, currentGrade).subscribe(() => {this.router.navigate(['/teacher-courses', this.id])});
       }
-      this.router.navigate(['/teacher-courses', this.id]);
+      
     }
   }
 }

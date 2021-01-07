@@ -23,7 +23,7 @@ export class AdminCoursesComponent implements OnInit {
   }
 
   onCreateAccount() {
-    // not implemented yet
+    this.router.navigate(['add-user'], {relativeTo: this.route});
   }
 
 }

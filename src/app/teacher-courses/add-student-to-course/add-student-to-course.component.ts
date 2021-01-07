@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
+import { EMPTY, forkJoin, Observable } from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 import { CourseService } from 'src/app/course.service';
 import { EnrollmentService } from 'src/app/enrollment.service';
 import { StudentService } from 'src/app/student.service';
@@ -13,7 +15,7 @@ import { StudentService } from 'src/app/student.service';
 export class AddStudentToCourseComponent implements OnInit {
 
   addForm!:FormGroup;
-  id!:number;
+  id!:string;
   constructor(private enrollmentService:EnrollmentService, 
     private studentService:StudentService,
     private courseService:CourseService,
@@ -31,7 +33,7 @@ export class AddStudentToCourseComponent implements OnInit {
       .subscribe( 
         (params: Params) => 
         { 
-          this.id = +params['id'];
+          this.id = params['id'];
           
           this.addForm.reset(); 
         }
@@ -39,10 +41,18 @@ export class AddStudentToCourseComponent implements OnInit {
   }
 
   onSubmit():void{
+
     if(this.addForm.valid){
-      let student = this.studentService.getStudentByEmail(this.addForm.value['email']);
-      let course = this.courseService.getCourseWithId(this.id);
-      this.enrollmentService.addEnrollment(student, course, 0);
+      let grade = 0;
+      forkJoin([this.studentService.getStudentByEmail(this.addForm.value['email']), this.courseService.getCourseWithId(this.id)]).pipe(
+        switchMap(result => {
+          if(result[0] && result[1])
+            return this.enrollmentService.addEnrollment(result[0], result[1], grade);
+          return EMPTY;
+        })
+      ).subscribe();
+      
+      //this.enrollmentService.addEnrollment(student, course, 0).subscribe();
     }
     
   }
