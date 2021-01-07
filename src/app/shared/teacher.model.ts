@@ -1,4 +1,7 @@
-export class Teacher {
+import { User } from "./user.model";
+
+export class Teacher{
+    role = "teacher";
     constructor(public id: string, public firstName: string, public lastName: string, public email:string) {}
 
     static getTeacherInstance(teacher:Teacher):Teacher{

@@ -3,11 +3,13 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import {map} from "rxjs/operators";
 import { Course } from "./shared/course.model";
+import { RandomPasswordGenerator } from "./shared/random-password-generator";
 import { TeacherService } from "./teacher.service";
 
 @Injectable({providedIn:'root'})
 export class CourseService{
     courses!: Course[];
+    randomPasswordGenerator = new RandomPasswordGenerator();
 
     nextId:number = 100;
 
@@ -15,9 +17,34 @@ export class CourseService{
          
     }
 
+    getCoursesByTeacher(teacherId:string):Observable<Course[]>{
+        /*return this.httpClient.get<{[key:string] : Course}>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/courses.json?orderBy="teacher/id"&equalTo="${teacherId}"`).pipe(
+            map(courses => {
+                if(!courses)
+                    return [];
+                
+                const result:Course[] = [];
+                for(const key in courses){
+                    
+                    result.push(Course.getCourseInstance(courses[key]));
+                }
+                
+                return result;
+            })
+        );*/
+        return this.getCourses().pipe(
+            map((courses:Course[]) => {
+
+                let result = courses.filter(course => course.teacher.id == teacherId);
+                console.log(result);
+                return result;
+            }
+        ));
+    }
+
     getNextId():string{
-        this.nextId += 1;
-        return `${this.nextId}`;
+        
+        return this.randomPasswordGenerator.generatePassword(12);
     }
 
     addCourse(course:Course):Observable<any>{

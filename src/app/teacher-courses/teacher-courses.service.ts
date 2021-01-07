@@ -18,6 +18,10 @@ export class TeacherCoursesService {
         return this.courseService.getCourses();
     }
 
+    getCoursesByTeacher(teacherId:string){
+        return this.courseService.getCoursesByTeacher(teacherId);
+    }
+
     getCourseWithId(id: string):Observable<Course | null>{
         return this.courseService.getCourseWithId(id);
     }

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import{HttpClientModule} from '@angular/common/http';
+import{HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,6 +30,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminNewCourseComponent } from './admin-courses/admin-new-course/admin-new-course.component';
 import { LoginComponent } from './authentication/login/login.component';
 import { HelloUserComponent } from './hello-user/hello-user.component';
+import { AuthInterceptorService } from './authentication/auth-interceptor.service';
+import { AdminNewUserComponent } from './admin-courses/admin-new-user/admin-new-user.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,8 @@ import { HelloUserComponent } from './hello-user/hello-user.component';
     LoginComponent,
     HelloUserComponent,
     AddStudentToCourseComponent,
-    AdminNewCourseComponent
+    AdminNewCourseComponent,
+    AdminNewUserComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +70,9 @@ import { HelloUserComponent } from './hello-user/hello-user.component';
   providers: [
     StudentCoursesService, 
     TeacherCoursesService, 
-    AdminCoursesService],
+    AdminCoursesService,
+    {provide:HTTP_INTERCEPTORS, useClass:AuthInterceptorService, multi:true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

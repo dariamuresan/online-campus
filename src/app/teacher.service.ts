@@ -16,7 +16,9 @@ export class TeacherService{
             })
         );
     }
-
+    addTeacher(teacher:Teacher):Observable<any>{
+        return this.httpClient.put(`https://online-campus-cc35b-default-rtdb.firebaseio.com/teachers/${teacher.id}.json`, teacher);
+    }
     getTeachers():Observable<Teacher[]>{
         return this.httpClient.get<{[key:string] : Teacher}>('https://online-campus-cc35b-default-rtdb.firebaseio.com/teachers.json').pipe(
             map(teachers => {

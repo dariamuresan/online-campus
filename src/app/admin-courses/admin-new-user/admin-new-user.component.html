@@ -1,0 +1,69 @@
+<div class="row" *ngIf = "!error">
+    <div class="col-12">
+        <form [formGroup] = "addForm" (ngSubmit) = "onSubmit()">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type = "text" formControlName="email" id = "email" class = "form-control" placeholder="email@email.com"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="firstName">First Name:</label>
+                        <input type = "text" formControlName="firstName" id = "firstName" class = "form-control" placeholder="email@email.com"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="lastName">Last Name:</label>
+                        <input type = "text" formControlName="lastName" id = "lastName" class = "form-control" placeholder="email@email.com"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type = "text" id = "password" class = "form-control" formControlName="password"/>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <button type="button" class="btn btn-default" (click)="generatePassword()">Generate</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="role">Role:</label>
+                        <select class="form-control" id="role" formControlName="role">
+                            <option [ngValue]="'student'">Student</option>
+                            <option [ngValue]="'teacher'">Teacher</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <button type = "submit" class="btn btn-primary" [disabled] = "addForm.invalid">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="alert alert-danger" *ngIf = "error">
+    <h3>Error ocurred!</h3>
+    <p>{{error}}</p>
+    <button class = "btn btn-danger" (click) = "onHandleError()">OK</button>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <button class = "btn btn-default" [routerLink] = "['/admin-courses']">Back home</button>
+    </div>
+</div>

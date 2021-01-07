@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { CourseService } from "../course.service";
+import { EnrollmentService } from "../enrollment.service";
 import { Course } from "../shared/course.model";
 import { Student } from "../shared/student.model";
 
@@ -10,7 +11,11 @@ export class StudentCoursesService {
 
     courseSelected = new EventEmitter<Course>();
 
-    constructor(private courseService:CourseService){}
+    constructor(private courseService:CourseService, private enrollmentService:EnrollmentService){}
+
+    getCoursesForStudent(studentId:string):Observable<Course[]>{
+        return this.enrollmentService.getCoursesForStudent(studentId);
+    }
 
     getCourses():Observable<Course[]>{
         // return this.loggedStudent.getCourses();

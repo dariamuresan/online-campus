@@ -1,10 +1,16 @@
+import { HttpClient } from "@angular/common/http";
 import { EventEmitter, Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-import { tap } from "rxjs/operators";
+import { merge, Observable, Subject } from "rxjs";
+import { switchMap, tap } from "rxjs/operators";
+import { AuthService } from "../authentication/auth.service";
 import { CourseService } from "../course.service";
 import { Course } from "../shared/course.model";
+import { Student } from "../shared/student.model";
 import { Teacher } from "../shared/teacher.model";
+import { User } from "../shared/user.model";
+import { StudentService } from "../student.service";
 import { TeacherService } from "../teacher.service";
+import { UserService } from "../user.service";
 
 @Injectable()
 export class AdminCoursesService {
@@ -13,7 +19,40 @@ export class AdminCoursesService {
 
     changedCourses = new Subject<void>();
 
-    constructor(private courseService:CourseService, private teacherService:TeacherService){}
+    constructor(private studentService:StudentService, private courseService:CourseService, private teacherService:TeacherService, private authService:AuthService, private httpClient:HttpClient){}
+
+    private sendEmail(email:string, password:string):Observable<any>{
+      return this.httpClient.get(`https://us-central1-online-campus-cc35b.cloudfunctions.net/sendMail?dest=${email}&password=${password}`,{
+        headers:{
+          'content-type':'text/plain',
+          'accept':'text/plain'
+        }
+      });
+    }
+
+    signupTeacher(email:string, password:string, role:string, teacher:Teacher):Observable<any>{
+      return this.authService.signup(email, password, role).pipe(
+        switchMap((user:User) => {
+          teacher.id = user.id;
+          return this.teacherService.addTeacher(teacher);
+        }),
+        switchMap(() => {
+          return this.sendEmail(email, password);
+        })
+      );
+    }
+
+    signupStudent(email:string, password:string, role:string, student:Student):Observable<any>{
+      return this.authService.signup(email, password, role).pipe(
+        switchMap((user:User) => {
+          student.id = user.id;
+          return this.studentService.addStudent(student);
+        }),
+        switchMap(() => {
+          return this.sendEmail(email, password);
+        })
+      );
+    }
 
     getCourses():Observable<Course[]>{
         return this.courseService.getCourses();

@@ -31,13 +31,15 @@ export class EnrollmentService{
         const studentId = student.id;
         const courseId = course.id;
         
-        return this.httpClient.get<{[key:string] : Enrollment}>('https://online-campus-cc35b-default-rtdb.firebaseio.com/enrollments.json').pipe(
-            map(enrollment => {
-                if(!enrollment)
-                    return false;
-                return true;   
+        return this.existsEnrollmentByStudentIdAndCourseId(studentId, courseId);
+    }
+
+    existsEnrollmentByStudentIdAndCourseId(studentId:string, courseId:string):Observable<boolean>{
+        return this.getEnrollmentsInCourse(courseId).pipe(
+            map((enrollments:Enrollment[]) => {
+                return enrollments.map(enrollment => enrollment.student.id).some(id => id === studentId);
             })
-        );
+        )
     }
 
     addEnrollment(student:Student, course:Course, grade:number):Observable<any>{
@@ -57,6 +59,26 @@ export class EnrollmentService{
         );
     }
     
+    getCoursesForStudent(studentId:string):Observable<Course[]>{
+        return this.getEnrollmentsForStudent(studentId).pipe(
+            map((enrollments:Enrollment[]) => {
+                return this.enrollments.map(enrollment => enrollment.course);
+            })
+        );
+    }
+
+    getEnrollmentsForStudent(studentId:string):Observable<Enrollment[]>{
+        return this.httpClient.get<{[key:string] : Enrollment}>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/enrollments.json?orderBy="student/id"&equalTo="${studentId}"`).pipe(
+            map((enrollmentsResponse) => {
+                
+                let result:Enrollment[] = [];
+                for(const key in enrollmentsResponse)
+                    result.push(Enrollment.getEnrollmentInstance(enrollmentsResponse[key]));
+                return result;
+            })
+        );
+    }
+
     getEnrollmentsInCourse(courseId:string):Observable<Enrollment[]>{
         return this.httpClient.get<{[key:string] : Enrollment}>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/enrollments.json?orderBy="course/id"&equalTo="${courseId}"`).pipe(
             map((enrollmentsResponse) => {
