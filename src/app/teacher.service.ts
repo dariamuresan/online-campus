@@ -1,25 +1,34 @@
+import { HttpClient } from "@angular/common/http";
 import { ThrowStmt } from "@angular/compiler";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { Teacher } from "./shared/teacher.model";
 
 @Injectable({providedIn:'root'})
 export class TeacherService{
-    teachers:Teacher[] = [
-        new Teacher(1, 'Cosmin', 'C.', 'test100@test.com'),
-        new Teacher(2, 'Cristina', 'M.', 'test101@test.com'),
-        new Teacher(3, 'Dan', 'P.', 'test102@test.com'),
-    ];  
+    constructor(private httpClient:HttpClient){}
 
-    getTeacherById(id:number):Teacher{
-        for(let teacher of this.teachers){
-            if(teacher.id == id){
-                return teacher;
-            }
-        }
-        return this.teachers[0];
+    getTeacherById(id:string):Observable<Teacher | null>{
+        return this.httpClient.get<Teacher>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/teachers/${id}.json`).pipe(
+            map((teachersResponse) => {
+                return Teacher.getTeacherInstance(teachersResponse);
+            })
+        );
     }
 
-    getTeachers():Teacher[]{
-        return this.teachers;
+    getTeachers():Observable<Teacher[]>{
+        return this.httpClient.get<{[key:string] : Teacher}>('https://online-campus-cc35b-default-rtdb.firebaseio.com/teachers.json').pipe(
+            map(teachers => {
+                if(!teachers)
+                    return [];
+                const result:Teacher[] = [];
+                for(const key in teachers){
+                    result.push(Teacher.getTeacherInstance(teachers[key]));
+                }
+                
+                return result;
+            })
+        );
     }
 }

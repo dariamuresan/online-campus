@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <form [formGroup] = "editForm" (ngSubmit) = "onSubmit()">
+        <form [formGroup] = "editForm" (ngSubmit) = "onSubmit()" *ngIf = "editForm">
             <div class="form-group">
                 <label for="exampleFormControlInput1">Course Name <span style = "color:red">*</span></label>
                 <input type="text" formControlName="name" class="form-control" id="exampleFormControlInput1" placeholder="Insert Course Name here">
@@ -13,7 +13,7 @@
                 <label for="exampleFormControlSelect1">Teacher <span style = "color:red">*</span></label>
                 <select class="form-control" id="exampleFormControlSelect1" formControlName="teacher">
                 <option
-                *ngFor="let teacher of teachers" [ngValue]="teacher.id">{{ teacher.firstName }} {{ teacher.lastName }}</option>
+                *ngFor="let teacher of teachers" [ngValue]="teacher">{{ teacher.firstName }} {{ teacher.lastName }}</option>
                 </select>
             </div>
             <div class="form-group">

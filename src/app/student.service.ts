@@ -1,37 +1,45 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { Student } from "./shared/student.model";
 
 @Injectable({providedIn:'root'})
 export class StudentService{
-    students: Student[] = [
-        new Student(1, "Daria", "M.", "test@test.com"),
-        new Student(2, "Daria", "N.", "test1@test.com"),
-        new Student(3, "Daria", "O.", "test2@test.com"),
-        new Student(4, "Daria", "P.", "test3@test.com"),
-        new Student(5, "Daria", "Q.", "test4@test.com"),
-        new Student(6, "Daria", "R.", "test5@test.com"),
-        new Student(7, "Daria", "S.", "test6@test.com"),
-        new Student(8, "Daria", "T.", "test7@test.com")
-      ];
-    getStudents():Student[] {
-        return this.students.slice();
+    
+    constructor(private httpClient:HttpClient){}
+    
+    getStudents():Observable<Student[]> {
+        return this.httpClient.get<{[key:string] : Student}>('https://online-campus-cc35b-default-rtdb.firebaseio.com/students.json').pipe(
+            map(students => {
+                if(!students)
+                    return [];
+                const result:Student[] = [];
+                for(const key in students){
+                    result.push(Student.getStudentInstance(students[key]));
+                }
+                return result;
+            })
+        );
     }
 
-    getStudentByEmail(email:string):Student{
-        for(let student of this.students){
-            if(student.email === email){
-                return student;
-            }
-        }
-        return this.students[0];
+    getStudentByEmail(email:string):Observable<Student | null>{
+        return this.httpClient.get<{[key:string] : Student}>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/students.json?orderBy="email"&equalTo="${email}"`).pipe(
+            map((studentsResponse) => {
+                
+                for(const key in studentsResponse)
+                    return Student.getStudentInstance(studentsResponse[key]);
+                return null;
+            })
+        );
     }
 
-    getStudentById(id:number):Student{
-        for(let student of this.students){
-            if(student.id === id){
-                return student;
-            }
-        }
-        return this.students[0];
+    getStudentById(id:string):Observable<Student | null>{
+        return this.httpClient.get<Student>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/students/${id}.json`).pipe(
+            map((studentsResponse) => {
+                
+                return Student.getStudentInstance(studentsResponse);
+            })
+        );
     }
 }

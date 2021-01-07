@@ -15,6 +15,8 @@ export class AdminNewCourseComponent implements OnInit {
 
   addForm!:FormGroup;
 
+  loading = false;
+
   constructor(private adminCoursesService: AdminCoursesService, private router:Router) { }
 
   private initForm():void{
@@ -27,20 +29,27 @@ export class AdminNewCourseComponent implements OnInit {
   }
   ngOnInit(): void {
     this.initForm();
-    this.teachers = this.adminCoursesService.getTeachers();
+    this.loading = true;
+    this.adminCoursesService.getTeachers().subscribe(
+        (teachers) => {
+          this.teachers = teachers;
+          this.loading = false;
+        }
+    );
   }
 
 
 
   onSubmit():void{
-    if(this.addForm.valid){
+    if(this.addForm.valid && !this.loading){
       const course = new Course(this.adminCoursesService.getNextId(), 
         this.addForm.value['name'],
-        this.adminCoursesService.getTeacherById(this.addForm.value['teacher']),
+        this.addForm.value['teacher'],
         this.addForm.value['description'],
         this.addForm.value['abbreviation']
       );
-      this.adminCoursesService.addCourse(course);
+      this.adminCoursesService.addCourse(course).subscribe();
+      this.router.navigate(['/admin-courses']);
     }     
   }
 

@@ -10,10 +10,14 @@ import { StudentCoursesService } from '../student-courses.service';
 export class StudentCourseListComponent implements OnInit {
   courses!: Course[];
 
-  constructor(private studemtCoursesService: StudentCoursesService) { }
+  constructor(private studentCoursesService: StudentCoursesService) { }
 
   ngOnInit(): void {
-    this.courses = this.studemtCoursesService.getCourses();
+    this.studentCoursesService.getCourses().subscribe(
+      (courses:Course[]) => {
+        this.courses = courses;
+      }
+    );
   }
 
 }

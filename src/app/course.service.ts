@@ -1,55 +1,65 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import {map} from "rxjs/operators";
 import { Course } from "./shared/course.model";
 import { TeacherService } from "./teacher.service";
 
 @Injectable({providedIn:'root'})
 export class CourseService{
-    courses: Course[];
+    courses!: Course[];
 
     nextId:number = 100;
 
-    constructor(private teacherService:TeacherService){
-        this.courses = [
-            new Course(1, 'Artificial Inteligence', this.teacherService.getTeacherById(1), 'piton', 'AIF'),
-            new Course(2, 'Software System Design', this.teacherService.getTeacherById(2), 'proiectul asta miune', 'SSD'),
-            new Course(3, 'Databases', this.teacherService.getTeacherById(1), 'SQL', 'DB')
-        ]; 
+    constructor(private teacherService:TeacherService, private httpClient:HttpClient){
+         
     }
 
-    getNextId():number{
+    getNextId():string{
         this.nextId += 1;
-        return this.nextId;
+        return `${this.nextId}`;
     }
 
-    addCourse(course:Course):void{
-        this.courses.push(course);
+    addCourse(course:Course):Observable<any>{
+        const courseId = course.id;
+        let newCourseWithIdKey:{[key:string]:Course}= {};
+        newCourseWithIdKey[`${courseId}`] = course;
+        return this.httpClient.put(`https://online-campus-cc35b-default-rtdb.firebaseio.com/courses/${courseId}.json`, course);
     }
 
-    getCourses():Course[] {
-        return this.courses.slice();
+    getCourses():Observable<Course[]> {
+        return this.httpClient.get<{[key:string] : Course}>('https://online-campus-cc35b-default-rtdb.firebaseio.com/courses.json').pipe(
+            map(courses => {
+                if(!courses)
+                    return [];
+                console.log(courses);
+                const result:Course[] = [];
+                for(const key in courses){
+                    console.log(courses[key]);
+                    result.push(Course.getCourseInstance(courses[key]));
+                }
+                console.log(result);
+                return result;
+            })
+        );
     }
 
-    getCourseWithId(id: number):Course {
-        for (let course of this.courses) {
-            if (course.id == id)
-                return course;
-        }
-        
-        return this.courses[0];
+    getCourseWithId(id: string):Observable<Course | null> {
+        return this.httpClient.get<Course>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/courses/${id}.json`).pipe(
+            map((coursesResponse) => {
+                console.log(coursesResponse);
+                return Course.getCourseInstance(coursesResponse);
+            })
+        );
     }
 
-    updateCourse(courseId: number, newCourse: Course):void{
-        for(let i = 0; i < this.courses.length; i++){
-            let course = this.courses[i];
-            if(course.id == courseId){
-                this.courses[i] = newCourse;
-                break;
-            }
-        }
+    updateCourse(courseId: string, newCourse: Course):Observable<any>{
+        let newCourseWithIdKey:{[key:string]:Course}= {};
+        newCourseWithIdKey[`${courseId}`] = newCourse;
+        return this.httpClient.put(`https://online-campus-cc35b-default-rtdb.firebaseio.com/courses/${courseId}.json`, newCourse);
     }
 
-    deleteCourse(courseId:number):void{
-        console.log(courseId);
-        this.courses = this.courses.filter(course => course.id != courseId);
+    deleteCourse(courseId:string):Observable<any>{
+        return this.httpClient.delete(`https://online-campus-cc35b-default-rtdb.firebaseio.com/courses/${courseId}.json`);
     }
 }

@@ -13,7 +13,11 @@ export class TeacherCourseListComponent implements OnInit {
   constructor(private teacherCoursesService: TeacherCoursesService) { }
 
   ngOnInit(): void {
-    this.courses = this.teacherCoursesService.getCourses();
+    this.teacherCoursesService.getCourses().subscribe(
+      (courses) => {
+        this.courses = courses;
+      }
+    );
   }
 
 }

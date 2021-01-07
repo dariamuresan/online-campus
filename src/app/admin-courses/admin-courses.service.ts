@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from "@angular/core";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import { tap } from "rxjs/operators";
 import { CourseService } from "../course.service";
 import { Course } from "../shared/course.model";
 import { Teacher } from "../shared/teacher.model";
@@ -14,38 +15,50 @@ export class AdminCoursesService {
 
     constructor(private courseService:CourseService, private teacherService:TeacherService){}
 
-    getCourses() {
+    getCourses():Observable<Course[]>{
         return this.courseService.getCourses();
     }
 
-    getTeachers() {
+    getTeachers():Observable<Teacher[]> {
         return this.teacherService.getTeachers();
     }
 
-    addCourse(course:Course):void{
-      this.courseService.addCourse(course);
-      this.changedCourses.next();
+    addCourse(course:Course):Observable<any>{
+      return this.courseService.addCourse(course).pipe(
+        tap({
+          complete:  () => {
+              this.changedCourses.next();
+            }
+        }
+      ));
     }
 
-    getCourseWithId(id: number) {
+    getCourseWithId(id: string):Observable<Course | null> {
         return this.courseService.getCourseWithId(id);  
     }
 
-    getNextId():number{
+    getNextId():string{
       return this.courseService.getNextId();
     }
 
-    getTeacherById(id:number):Teacher{
+    getTeacherById(id:string):Observable<Teacher | null>{
       return this.teacherService.getTeacherById(id);
     }
 
-    updateCourse(courseId: number, course: Course) {
-      this.courseService.updateCourse(courseId, course);
-      this.changedCourses.next();
+    updateCourse(courseId: string, course: Course):Observable<any>{
+      return this.courseService.updateCourse(courseId, course).pipe(
+        tap({
+          complete: () => {this.changedCourses.next()}
+        })
+      );
+      
     }
 
-    deleteCourse(courseId:number){
-      this.courseService.deleteCourse(courseId);
-      this.changedCourses.next();
+    deleteCourse(courseId:string) : Observable<any>{
+      return this.courseService.deleteCourse(courseId).pipe(
+        tap({
+          complete: () => {this.changedCourses.next()}
+        })
+      );
     }
 }

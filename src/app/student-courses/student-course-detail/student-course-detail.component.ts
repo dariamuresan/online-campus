@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Course } from 'src/app/shared/course.model';
 import { StudentCoursesService } from '../student-courses.service';
 
@@ -9,17 +10,26 @@ import { StudentCoursesService } from '../student-courses.service';
   styleUrls: ['./student-course-detail.component.css']
 })
 export class StudentCourseDetailComponent implements OnInit {
-  course!: Course;
-  courseID!: number;
+  course!: Course | null;
+  courseID!: string;
   grade = 4;
 
   constructor(private studentCoursesService: StudentCoursesService, 
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe( (params: Params) => {
-      this.courseID = params['id']
-      this.course = this.studentCoursesService.getCourseWithID(this.courseID)} );
+    this.route.params.pipe( 
+      map((params: Params) => {
+          return params['id'];
+         }),
+      tap((courseId:string) => {
+        this.courseID = courseId;
+      }),
+      switchMap((courseId) => {
+          return this.studentCoursesService.getCourseWithID(courseId);
+        } 
+      )
+    ).subscribe((course) => {this.course = course;});
   }
 
 }
