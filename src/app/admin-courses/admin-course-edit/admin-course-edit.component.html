@@ -13,7 +13,7 @@
                 <label for="exampleFormControlSelect1">Teacher <span style = "color:red">*</span></label>
                 <select class="form-control" id="exampleFormControlSelect1" formControlName="teacher">
                 <option
-                *ngFor="let teacher of teachers" [ngValue]="teacher">{{ teacher.firstName }} {{ teacher.lastName }}</option>
+                *ngFor="let teacher of teachers" [ngValue]="teacher.id">{{ teacher.firstName }} {{ teacher.lastName }}</option>
                 </select>
             </div>
             <div class="form-group">

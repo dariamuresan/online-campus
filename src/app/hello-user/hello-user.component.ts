@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../authentication/auth.service';
+import { User } from '../shared/user.model';
 
 @Component({
   selector: 'app-hello-user',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HelloUserComponent implements OnInit {
 
+  
+
   constructor() { }
 
   ngOnInit(): void {
+    
   }
 
 }

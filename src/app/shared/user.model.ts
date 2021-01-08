@@ -8,7 +8,7 @@ export class User{
 
     static createInstanceFromResponseAndRole(response:AuthResponse, role?:string){
         let expireDate = new Date();
-        expireDate.setSeconds(expireDate.getSeconds() + (+response.expiresIn));
+        expireDate.setTime(expireDate.getTime() + (+response.expiresIn * 1000));
         return new User(response.email, response.idToken, expireDate, response.localId, role);
     }
 

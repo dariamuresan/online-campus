@@ -23,10 +23,7 @@ export class AdminCoursesService {
 
     private sendEmail(email:string, password:string):Observable<any>{
       return this.httpClient.get(`https://us-central1-online-campus-cc35b.cloudfunctions.net/sendMail?dest=${email}&password=${password}`,{
-        headers:{
-          'content-type':'text/plain',
-          'accept':'text/plain'
-        }
+        responseType:'text'
       });
     }
 

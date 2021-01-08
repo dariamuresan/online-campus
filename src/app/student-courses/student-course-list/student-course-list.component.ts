@@ -24,7 +24,9 @@ export class StudentCourseListComponent implements OnInit {
         
         return this.studentCoursesService.getCoursesForStudent(user.id);
       })
-    ).subscribe();
+    ).subscribe((courses:Course[]) => {
+      this.courses = courses;
+    });
   }
 
 }

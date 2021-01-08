@@ -31,6 +31,12 @@ export class AuthService{
         return this.currentUser;
     }
 
+    getCurrentUserId():string | null{
+        if(!this.currentUser)
+            return null;
+        return this.currentUser.id;
+    }
+
     isAuthenticated():boolean{
         return !!this.currentUser;
     }
@@ -62,7 +68,7 @@ export class AuthService{
                 return User.createInstanceFromResponseAndRole(authResponse);
             }),
             tap((user:User) => {
-                this.setLogoutTimer(user.expirationDate.getSeconds() - new Date().getSeconds());
+                this.setLogoutTimer(user.expirationDate.getTime() - new Date().getTime());
                 this.currentUser = user;
             }),
             switchMap((user:User) => {
@@ -77,15 +83,15 @@ export class AuthService{
         );
     }
 
-    private setLogoutTimer(expirationTimeInSeconds:number):void{
-        let expirationTimeInMiliseconds = expirationTimeInSeconds * 1000;
+    private setLogoutTimer(expirationTimeInMiliseconds:number):void{
+        
         this.expirationLogoutTimer = setTimeout(() => {
             this.logout();
         }, expirationTimeInMiliseconds); 
     }
 
     logout():void{
-        this.expirationLogoutTimer.clear();
+        //this.expirationLogoutTimer.clear();
         this.currentUser = null;
         this.user.next(null);
     }
