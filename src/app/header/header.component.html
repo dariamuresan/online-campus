@@ -1,21 +1,19 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
-        <div class="navbar-header">
-            <a  routerLink="" class="navbar-brand">Online Campus</a>
+        <div class="navbar-header" *ngIf = "user">
+            <a  [routerLink]="startRoute" class="navbar-brand">Online Campus</a>
         </div>
 
         <div class="collapse navbar-collapse navbar-left">
-            <ul class="nav navbar-nav">
-                <li><a routerLink="/admin-courses">Admin</a></li>
-                <li><a routerLink="/teacher-courses">Teacher</a></li>
-                <li><a routerLink="/student-courses">Student</a></li>
+            <ul class="nav navbar-nav" *ngIf = "user && user.role">
+                <li><a [routerLink]="startRoute" style = "cursor: pointer;">{{user.role}}</a></li>
             </ul>
         </div>
         
         <div class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
-                <li><a href="#">Login</a></li>
-                <li><a href="#">Sing in</a></li>
+                <li *ngIf = "!user" style = "cursor: pointer;"><a (click)="onLogin()">Login</a></li>
+                <li *ngIf = "user"><a (click)="onLogout()" style="cursor: pointer;">Logout</a></li>
             </ul>
         </div>
     </div>

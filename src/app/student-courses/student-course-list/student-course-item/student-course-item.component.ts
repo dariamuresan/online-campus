@@ -10,13 +10,13 @@ import { StudentCoursesService } from '../../student-courses.service';
 })
 export class StudentCourseItemComponent implements OnInit {
   @Input() course!: Course;
-  courseID!: number;
+  courseID!: string;
 
   constructor(private studentCoursesService : StudentCoursesService,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.courseID = this.course.ID;
+    this.courseID = this.course.id;
   }
 
 }

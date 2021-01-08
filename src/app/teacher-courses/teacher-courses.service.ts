@@ -1,41 +1,53 @@
-import { EventEmitter } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
+import { forkJoin, Observable } from "rxjs";
+import { switchMap } from "rxjs/operators";
+import { CourseService } from "../course.service";
+import { EnrollmentService } from "../enrollment.service";
 import { Course } from "../shared/course.model";
 import { Student } from "../shared/student.model";
+import { StudentService } from "../student.service";
 
+@Injectable()
 export class TeacherCoursesService {
-    courses: Course[] = [
-        new Course(1, 'Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
-        new Course(2, 'Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
-        new Course(3, 'Databases', 'Dan P.', 'SQL', 'DB')
-    ];
-
-    students: Student[] = [
-        new Student(1, "Daria", "M."),
-        new Student(1, "Daria", "N."),
-        new Student(1, "Daria", "O."),
-        new Student(1, "Daria", "P."),
-        new Student(1, "Daria", "Q."),
-        new Student(1, "Daria", "R."),
-        new Student(1, "Daria", "S."),
-        new Student(1, "Daria", "T.")
-      ];
 
     selectedCourse = new EventEmitter<Course>();
 
-    getCourses() {
-        return this.courses.slice();
+    constructor(private studentService:StudentService, private courseService:CourseService, private enrollmentService:EnrollmentService){}
+
+    getCourses():Observable<Course[]> {
+        return this.courseService.getCourses();
     }
 
-    getCourseWithId(id: number) {
-        for (let course of this.courses) {
-            if (course.ID == id)
-                return course;
-        }
+    getCoursesByTeacher(teacherId:string){
+        return this.courseService.getCoursesByTeacher(teacherId);
+    }
+
+    getCourseWithId(id: string):Observable<Course | null>{
+        return this.courseService.getCourseWithId(id);
+    }
+
+    getStudents():Observable<Student[]>{
+        return this.studentService.getStudents();
+    }
+
+    getStudentByEmail(email:string):Observable<Student | null>{
+        return this.studentService.getStudentByEmail(email);
+    }
+
+    private studentFromEmailAndCourseFromIdRetrieverObservable(studentEmail:string, courseId:string):Observable<any[]>{
+        const studentObservable = this.getStudentByEmail(studentEmail);
+        const courseObservable = this.getCourseWithId(courseId);
+        return forkJoin([studentObservable, courseObservable]);
+    }
+
+    addStudentToCourse(studentEmail:string, courseId:string):Observable<any>{
         
-        return this.courses[0];
-    }
-
-    getStudents() {
-        return this.students.slice();
+        
+        return this.studentFromEmailAndCourseFromIdRetrieverObservable(studentEmail, courseId).pipe(
+            switchMap((studentAndCourse:any[]) => {
+                const student = studentAndCourse[0];
+                const course = studentAndCourse[1];
+                return this.enrollmentService.addEnrollment(student, course, 0);
+            }));
     }
 }

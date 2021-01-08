@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import{HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,26 +25,13 @@ import { StudentCoursesService } from './student-courses/student-courses.service
 import { TeacherCoursesService } from './teacher-courses/teacher-courses.service';
 import { AdminCoursesService } from './admin-courses/admin-courses.service';
 import { CourseNotSelectedComponent } from './course-not-selected/course-not-selected.component';
-
-const appRoutes: Routes = [
-  {path: '', component: HomeComponent, pathMatch: 'full'},
-  {path: 'student-courses', component: StudentCoursesComponent, children: [
-    {path: '', component: CourseNotSelectedComponent},
-    {path: ':id', component: StudentCourseDetailComponent}
-  ]},
-  {path: 'teacher-courses', component: TeacherCoursesComponent, children: [
-    {path: '', component: TeacherCourseListComponent},
-    {path: ':id', component: TeacherCourseDetailComponent},
-    {path: ':id/edit', component: TeacherCoursesEditComponent}
-  ]},
-  {path: 'admin-courses', component: AdminCoursesComponent, children: [
-    {path: '', component: CourseNotSelectedComponent},
-    {path: ':id', component: AdminCourseEditComponent}
-    // {path: 'new', component: AdminCourseNewComponent}
-  ]},
-  {path: 'not-found', component: PageNotFoundComponent},
-  {path: '**', redirectTo: 'not-found'}
-];
+import { AddStudentToCourseComponent } from './teacher-courses/add-student-to-course/add-student-to-course.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AdminNewCourseComponent } from './admin-courses/admin-new-course/admin-new-course.component';
+import { LoginComponent } from './authentication/login/login.component';
+import { HelloUserComponent } from './hello-user/hello-user.component';
+import { AuthInterceptorService } from './authentication/auth-interceptor.service';
+import { AdminNewUserComponent } from './admin-courses/admin-new-user/admin-new-user.component';
 
 @NgModule({
   declarations: [
@@ -64,17 +52,27 @@ const appRoutes: Routes = [
     AdminCourseEditComponent,
     HomeComponent,
     PageNotFoundComponent,
-    CourseNotSelectedComponent
+    CourseNotSelectedComponent,
+    AdminNewCourseComponent,
+    LoginComponent,
+    HelloUserComponent,
+    AddStudentToCourseComponent,
+    AdminNewCourseComponent,
+    AdminNewUserComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    RouterModule.forRoot(appRoutes)
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule
   ],
   providers: [
     StudentCoursesService, 
     TeacherCoursesService, 
-    AdminCoursesService],
+    AdminCoursesService,
+    {provide:HTTP_INTERCEPTORS, useClass:AuthInterceptorService, multi:true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -9,12 +9,12 @@ import { TeacherCoursesService } from '../../teacher-courses.service';
 })
 export class TeacherCourseItemComponent implements OnInit {
   @Input() course!: Course;
-  id!: number;
+  id!: string;
   
   constructor(private teacherCoursesService: TeacherCoursesService) { }
 
   ngOnInit(): void {
-    this.id = this.course.ID;
+    this.id = this.course.id;
   }
 
 }

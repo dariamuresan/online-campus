@@ -1,32 +1,42 @@
-import { EventEmitter } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { CourseService } from "../course.service";
+import { EnrollmentService } from "../enrollment.service";
 import { Course } from "../shared/course.model";
+import { Enrollment } from "../shared/enrollment.model";
 import { Student } from "../shared/student.model";
 
+@Injectable()
 export class StudentCoursesService {
     //private loggedStudent!: Student;
 
-    courses: Course[] = [
-        new Course(1, 'Artificial Inteligence', 'Cosmin C.', 'piton', 'AIF'),
-        new Course(2, 'Software System Design', 'Cristina M.', 'proiectul asta miune', 'SSD'),
-        new Course(3, 'Databases', 'Dan P.', 'SQL', 'DB')
-    ];
-
     courseSelected = new EventEmitter<Course>();
 
-    getCourses() {
+    constructor(private courseService:CourseService, private enrollmentService:EnrollmentService){}
+
+    getCoursesForStudent(studentId:string):Observable<Course[]>{
+        return this.enrollmentService.getCoursesForStudent(studentId);
+    }
+
+    getCourses():Observable<Course[]>{
         // return this.loggedStudent.getCourses();
-        return this.courses.slice();
+        return this.courseService.getCourses();
     }
 
-    getCourseWithID(id: number) {
-        for(let c of this.courses) {
-            if(c.ID == id)
-                return c;
-        }
-        
-        return this.courses[0];
+    getCourseWithID(id: string): Observable<Course | null> {
+        return this.courseService.getCourseWithId(id);
     }
 
+    getGrade(studentId:string, courseId:string):Observable<number>{
+        return this.enrollmentService.getEnrollmentByStudentIdAndCourseId(studentId, courseId).pipe(
+            map((enrollment:Enrollment | null) => {
+                if(!enrollment)
+                    return 0;
+                return enrollment.grade;
+            }
+        ));
+    }
     /*searchCourses() {
         saerch in the database for the courses your logged student is enrolled at
     }*/

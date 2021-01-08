@@ -10,13 +10,14 @@ import { AdminCoursesService } from '../../admin-courses.service';
 })
 export class AdminCourseItemComponent implements OnInit {
   @Input() course!: Course;
-  courseID!: number;
+  courseID!: string;
   
   constructor(private adminCoursesService: AdminCoursesService,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.courseID = this.course.ID;
+    if(this.course)
+      this.courseID = this.course.id;
   }
 
 }

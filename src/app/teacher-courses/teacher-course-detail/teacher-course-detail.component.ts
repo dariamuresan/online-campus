@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { EnrollmentService } from 'src/app/enrollment.service';
 import { Course } from 'src/app/shared/course.model';
+import { Enrollment } from 'src/app/shared/enrollment.model';
 import { Student } from 'src/app/shared/student.model';
 import { TeacherCoursesService } from '../teacher-courses.service';
 
@@ -10,22 +14,41 @@ import { TeacherCoursesService } from '../teacher-courses.service';
   styleUrls: ['./teacher-course-detail.component.css']
 })
 export class TeacherCourseDetailComponent implements OnInit {
-  students: Student[] = [];
-  id!: number;
+  enrollments: Enrollment[] = [];
+  id!: string;
 
-  course!: Course;
+  course!: Course | null;
 
   columnsToDisplay = ['name'];
 
   constructor(private teacherCoursesService: TeacherCoursesService,
+              private enrollmentService:EnrollmentService,
               private route: ActivatedRoute,
               private router: Router) { }
 
-  ngOnInit(): void {
-    this.route.params
-      .subscribe( (params: Params) => { this.id = +params['id']; this.course = this.teacherCoursesService.getCourseWithId(this.id)})
+  private observeRouteForCourse():void{
+    this.route.params.pipe(
+      map((params:Params) => {
+        return params['id'];
+      }),
+      tap((courseId:string) => {
+        this.id = courseId;
+      }),
+      switchMap((courseId:string) => {
+        return forkJoin([this.teacherCoursesService.getCourseWithId(courseId), this.enrollmentService.getEnrollmentsInCourse(courseId)]);
+      })
+    ).subscribe( 
+       (result:any[]) => {
+         this.course = result[0];
+         this.enrollments = result[1];
+       }
+    );
+  }
+  
 
-    this.students = this.teacherCoursesService.getStudents();
+  ngOnInit(): void {
+    this.observeRouteForCourse();
+    //this.enrollments = this.enrollmentService.getEnrollmentsInCourse(this.id);
   }
 
   onEditCourse() {
