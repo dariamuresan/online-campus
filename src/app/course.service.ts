@@ -18,7 +18,7 @@ export class CourseService{
     }
 
     getCoursesByTeacher(teacherId:string):Observable<Course[]>{
-        /*return this.httpClient.get<{[key:string] : Course}>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/courses.json?orderBy="teacher/id"&equalTo="${teacherId}"`).pipe(
+        return this.httpClient.get<{[key:string] : Course}>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/courses.json?orderBy="teacher/id"&equalTo="${teacherId}"`).pipe(
             map(courses => {
                 if(!courses)
                     return [];
@@ -31,15 +31,7 @@ export class CourseService{
                 
                 return result;
             })
-        );*/
-        return this.getCourses().pipe(
-            map((courses:Course[]) => {
-
-                let result = courses.filter(course => course.teacher.id == teacherId);
-                console.log(result);
-                return result;
-            }
-        ));
+        );
     }
 
     getNextId():string{

@@ -48,8 +48,12 @@ export class AdminNewCourseComponent implements OnInit {
         this.addForm.value['description'],
         this.addForm.value['abbreviation']
       );
-      this.adminCoursesService.addCourse(course).subscribe();
-      this.router.navigate(['/admin-courses']);
+      this.adminCoursesService.addCourse(course).subscribe(
+        () => {
+          this.router.navigate(['/admin-courses']);
+        }
+      );
+      
     }     
   }
 

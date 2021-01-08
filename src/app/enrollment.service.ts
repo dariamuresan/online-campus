@@ -34,10 +34,23 @@ export class EnrollmentService{
         return this.existsEnrollmentByStudentIdAndCourseId(studentId, courseId);
     }
 
-    existsEnrollmentByStudentIdAndCourseId(studentId:string, courseId:string):Observable<boolean>{
+    getEnrollmentByStudentIdAndCourseId(studentId:string, courseId:string):Observable<Enrollment | null>{
         return this.getEnrollmentsInCourse(courseId).pipe(
             map((enrollments:Enrollment[]) => {
-                return enrollments.map(enrollment => enrollment.student.id).some(id => id === studentId);
+                const result = enrollments.filter(enrollment => enrollment.student.id === studentId);
+                if(result)
+                    return result[0];
+                return null;
+            })
+        )
+    }
+
+    existsEnrollmentByStudentIdAndCourseId(studentId:string, courseId:string):Observable<boolean>{
+        return this.getEnrollmentByStudentIdAndCourseId(studentId, courseId).pipe(
+            map((enrollment:Enrollment | null) => {
+                if(enrollment)
+                    return true;
+                return false;
             })
         )
     }
@@ -62,12 +75,14 @@ export class EnrollmentService{
     getCoursesForStudent(studentId:string):Observable<Course[]>{
         return this.getEnrollmentsForStudent(studentId).pipe(
             map((enrollments:Enrollment[]) => {
-                return this.enrollments.map(enrollment => enrollment.course);
+                console.log(enrollments);
+                return enrollments.map(enrollment => enrollment.course);
             })
         );
     }
 
     getEnrollmentsForStudent(studentId:string):Observable<Enrollment[]>{
+        console.log(studentId);
         return this.httpClient.get<{[key:string] : Enrollment}>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/enrollments.json?orderBy="student/id"&equalTo="${studentId}"`).pipe(
             map((enrollmentsResponse) => {
                 

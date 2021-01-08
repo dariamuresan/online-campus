@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { EMPTY, forkJoin } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { Course } from 'src/app/shared/course.model';
 import { Teacher } from 'src/app/shared/teacher.model';
@@ -27,7 +27,7 @@ export class AdminCourseEditComponent implements OnInit {
     this.editForm = new FormGroup({
       'name': new FormControl(this.course.name, Validators.required),
       'abbreviation': new FormControl(this.course.abreviation, Validators.required),
-      'teacher': new FormControl(this.course.teacher, Validators.required),
+      'teacher': new FormControl(this.course.teacher.id, Validators.required),
       'description': new FormControl(this.course.description)
     });
   }
@@ -58,14 +58,29 @@ export class AdminCourseEditComponent implements OnInit {
 
   onSubmit():void{
     if(this.editForm && this.editForm.valid){
-      const course = new Course(this.courseId, 
-        this.editForm.value['name'],
-        this.editForm.value['teacher'],
-        this.editForm.value['description'],
-        this.editForm.value['abbreviation']
-      );
-      this.adminCoursesService.updateCourse(this.courseId, course).subscribe();
-      this.router.navigate(['/admin-courses']);
+      const name = this.editForm.value['name'];
+      const teacherId = this.editForm.value['teacher'];
+      const description = this.editForm.value['description'];
+      const abreviation = this.editForm.value['abbreviation'];
+      this.adminCoursesService.getTeacherById(teacherId).pipe(
+        map((teacher:Teacher | null) => {
+          if(!teacher)
+            return null;
+          return new Course(this.courseId, 
+            name,
+            teacher,
+            description,
+            abreviation
+          );
+        }),
+        switchMap((course:Course | null) => {
+          if(course)
+            return this.adminCoursesService.updateCourse(this.courseId, course);
+          return EMPTY;    
+        }
+      )).subscribe(() => {
+        this.router.navigate(['/admin-courses']);
+      })
     }     
   }
 

@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { AuthService } from 'src/app/authentication/auth.service';
 import { Course } from 'src/app/shared/course.model';
 import { StudentCoursesService } from '../student-courses.service';
 
@@ -12,10 +14,11 @@ import { StudentCoursesService } from '../student-courses.service';
 export class StudentCourseDetailComponent implements OnInit {
   course!: Course | null;
   courseID!: string;
-  grade = 4;
+  grade!:number;
 
   constructor(private studentCoursesService: StudentCoursesService, 
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private authService:AuthService) { }
 
   ngOnInit(): void {
     this.route.params.pipe( 
@@ -26,10 +29,20 @@ export class StudentCourseDetailComponent implements OnInit {
         this.courseID = courseId;
       }),
       switchMap((courseId) => {
-          return this.studentCoursesService.getCourseWithID(courseId);
+          const currentUserId = this.authService.getCurrentUserId();
+          let gradeObserver:any;
+          if(!currentUserId)
+            gradeObserver = of(0);
+          else
+            gradeObserver = this.studentCoursesService.getGrade(currentUserId, this.courseID);
+          return forkJoin([this.studentCoursesService.getCourseWithID(courseId), gradeObserver]);
         } 
       )
-    ).subscribe((course) => {this.course = course;});
+    ).subscribe(
+      (result:any[]) => {
+        this.course = result[0];
+        this.grade = result[1];
+    });
   }
 
 }

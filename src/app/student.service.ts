@@ -23,7 +23,7 @@ export class StudentService{
         );
     }
     addStudent(student:Student):Observable<any>{
-        return this.httpClient.put(`https://online-campus-cc35b-default-rtdb.firebaseio.com/student/${student.id}.json`, student);
+        return this.httpClient.put(`https://online-campus-cc35b-default-rtdb.firebaseio.com/students/${student.id}.json`, student);
     }
     getStudentByEmail(email:string):Observable<Student | null>{
         return this.httpClient.get<{[key:string] : Student}>(`https://online-campus-cc35b-default-rtdb.firebaseio.com/students.json?orderBy="email"&equalTo="${email}"`).pipe(
